@@ -29,8 +29,10 @@ if(secs.length&&sideLinks.length){
 // accordion
 document.querySelectorAll('.acc-item').forEach(item=>{
   const q=item.querySelector('.acc-q'),a=item.querySelector('.acc-a');
+  q.setAttribute('aria-expanded','false');
   q.addEventListener('click',()=>{
     const open=item.classList.toggle('open');
+    q.setAttribute('aria-expanded',open);
     a.style.maxHeight=open?a.scrollHeight+'px':'0';
   });
 });

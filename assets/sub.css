@@ -170,6 +170,35 @@ nav.primary li:hover .dropdown,nav.primary li:focus-within .dropdown{opacity:1;v
 .btn:hover{color:var(--navy-950)}
 .btn:hover::before{transform:scaleX(1);transform-origin:left}
 
+/* video grid */
+.video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin:2rem 0}
+.video-card{background:var(--navy-800);border:1px solid rgba(255,255,255,.07);overflow:hidden;transition:transform .3s var(--ease),border-color .3s}
+.video-card:hover{transform:translateY(-4px);border-color:var(--line)}
+.video-card iframe{width:100%;aspect-ratio:16/9;display:block;border:0}
+@media(max-width:1060px){.video-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.video-grid{grid-template-columns:1fr}}
+
+/* contacts */
+.contact-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:2.4rem;align-items:start}
+@media(max-width:1060px){.contact-grid{grid-template-columns:1fr}}
+.contact-card{background:var(--navy-800);border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--gold);padding:2rem}
+.contact-card p{display:flex;gap:.9rem;align-items:flex-start;color:var(--text-dim);font-size:.92rem;margin-bottom:1rem}
+.contact-card svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:1.8;flex-shrink:0;margin-top:4px}
+.contact-card a.inline{color:var(--gold-light);border-bottom:1px solid var(--line)}
+.contact-card a.inline:hover{color:#fff;border-bottom-color:#fff}
+.hours{margin-top:.4rem}
+.hours li{padding:.9rem 0;border-top:1px solid rgba(255,255,255,.07);font-size:.88rem;color:var(--text-dim)}
+.hours li b{color:var(--text);display:block;margin-bottom:.2rem}
+.embed-frame{border:1px solid rgba(255,255,255,.1);background:var(--navy-950);overflow:hidden}
+.embed-frame iframe{display:block;border:0;width:100%}
+
+/* news article */
+.article-meta{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;margin-bottom:1.6rem}
+.article-date{background:var(--navy-950);border-left:3px solid var(--gold);padding:.45rem .9rem;font-size:.72rem;font-weight:700;letter-spacing:.1em}
+.article-tag{font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.hashtags{margin-top:2rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.hashtags span{font-size:.72rem;color:var(--text-dim);border:1px solid rgba(255,255,255,.1);padding:.3rem .7rem;letter-spacing:.04em}
+
 /* reveal */
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
 .reveal.revealed{opacity:1;transform:none}

@@ -76,6 +76,7 @@ nav.primary li:hover .dropdown,nav.primary li:focus-within .dropdown{opacity:1;v
 .burger.active span:nth-child(1){transform:translateY(8px) rotate(45deg)}
 .burger.active span:nth-child(2){opacity:0}
 .burger.active span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+body.menu-open{overflow:hidden}
 
 /* ---------- hero ---------- */
 .hero{position:relative;height:min(88vh,820px);min-height:560px;overflow:hidden;background:var(--navy-950)}
@@ -95,7 +96,7 @@ nav.primary li:hover .dropdown,nav.primary li:focus-within .dropdown{opacity:1;v
 @keyframes rise{to{transform:translateY(0)}}
 .hero p{margin-top:1.4rem;max-width:560px;color:var(--text-dim);font-size:1.02rem;opacity:0;animation:fadeUp .9s .6s var(--ease) forwards}
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-.hero-cta{display:flex;gap:1rem;margin-top:2.2rem;opacity:0;animation:fadeUp .9s .8s var(--ease) forwards}
+.hero-cta{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2.2rem;opacity:0;animation:fadeUp .9s .8s var(--ease) forwards}
 .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.95rem 2rem;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--gold);position:relative;overflow:hidden;transition:color .3s;cursor:pointer;font-family:inherit;background:none}
 .btn::before{content:"";position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease);z-index:-1}
 .btn:hover::before{transform:scaleX(1);transform-origin:left}
@@ -237,6 +238,10 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
   .dropdown{position:static;opacity:1;visibility:visible;transform:none;border:0;box-shadow:none;background:transparent;display:none;padding:0 0 .6rem}
   nav.primary li.open .dropdown{display:block}
   .burger{display:block;position:relative;z-index:1002}
+  .lang-btn{position:relative;z-index:1002}
+  nav.primary>ul>li.open>a{color:var(--gold-light)}
+  .dropdown a{padding:.7rem 0 .7rem 1.2rem;border-left:2px solid rgba(201,162,39,.3)}
+
   .mission-grid,.about-grid{grid-template-columns:1fr;gap:2.6rem}
   .about-grid .about-figure{order:-1}
   .footer-grid{grid-template-columns:1fr 1fr}
@@ -648,12 +653,21 @@ document.querySelectorAll('.work-card').forEach(c=>{
 
 // mobile menu
 const burger=document.getElementById('burger'),nav=document.getElementById('nav');
-burger.onclick=()=>{burger.classList.toggle('active');nav.classList.toggle('open')};
+const closeMenu=()=>{burger.classList.remove('active');nav.classList.remove('open');document.body.classList.remove('menu-open');burger.setAttribute('aria-expanded','false')};
+burger.setAttribute('aria-expanded','false');
+burger.onclick=()=>{
+  const open=burger.classList.toggle('active');
+  nav.classList.toggle('open',open);
+  document.body.classList.toggle('menu-open',open);
+  burger.setAttribute('aria-expanded',open);
+  if(!open)nav.querySelectorAll('li.open').forEach(l=>l.classList.remove('open'));
+};
 nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{
   const li=a.parentElement;
-  if(innerWidth<=1060&&li.querySelector('.dropdown')&&!li.classList.contains('open')){e.preventDefault();li.classList.add('open');return}
-  burger.classList.remove('active');nav.classList.remove('open');
+  if(innerWidth<=1060&&li.querySelector&&li.querySelector('.dropdown')){e.preventDefault();li.classList.toggle('open');return}
+  closeMenu();
 }));
+addEventListener('resize',()=>{if(innerWidth>1060)closeMenu()});
 </script>
 </body>
 </html>

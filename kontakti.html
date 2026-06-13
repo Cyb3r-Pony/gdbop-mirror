@@ -11,9 +11,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
 <link rel="stylesheet" href="css/sub.css">
-<link rel="stylesheet" href="css/leaflet.css">
 <style>
-#map-gdbop{height:520px;width:100%;border-radius:4px;z-index:0}
+.map-frame{height:520px;border-radius:4px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+.map-frame iframe{width:100%;height:100%;display:block;border:0}
 @media(max-width:860px){.contact-grid-inline{grid-template-columns:1fr !important}}
 </style>
 </head>
@@ -91,22 +91,10 @@
   <div class=”contact-grid-inline” style=”display:grid;grid-template-columns:1fr 1.2fr;gap:3rem;align-items:start;margin-top:1rem”>
     <div>
       <div class=”contact-card”>
-        <div style=”display:flex;gap:.9rem;align-items:flex-start;color:var(--text-dim);font-size:.92rem;margin-bottom:1rem”>
-          <svg viewBox=”0 0 24 24” width=”17” height=”17” style=”width:17px;height:17px;min-width:17px;flex-shrink:0;margin-top:3px;fill:none;stroke:#c9a227;stroke-width:1.8”><path d=”M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z”/><circle cx=”12” cy=”10” r=”2.5”/></svg>
-          <span><strong style=”color:var(--text)”>Главна дирекция „Борба с организираната престъпност”</strong><br>Министерство на вътрешните работи · Република България<br>гр. София, пощенски код 1784<br>бул. „Цариградско шосе” № 133А</span>
-        </div>
-        <div style=”display:flex;gap:.9rem;align-items:flex-start;color:var(--text-dim);font-size:.92rem;margin-bottom:1rem”>
-          <svg viewBox=”0 0 24 24” width=”17” height=”17” style=”width:17px;height:17px;min-width:17px;flex-shrink:0;margin-top:3px;fill:none;stroke:#c9a227;stroke-width:1.8”><path d=”M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z”/></svg>
-          <span>тел.: <a class=”inline” href=”tel:+35929828363”>02/98 28 363</a></span>
-        </div>
-        <div style=”display:flex;gap:.9rem;align-items:flex-start;color:var(--text-dim);font-size:.92rem;margin-bottom:1rem”>
-          <svg viewBox=”0 0 24 24” width=”17” height=”17” style=”width:17px;height:17px;min-width:17px;flex-shrink:0;margin-top:3px;fill:none;stroke:#c9a227;stroke-width:1.8”><rect x=”3” y=”5” width=”18” height=”14” rx=”2”/><path d=”m3 7 9 6 9-6”/></svg>
-          <span>мейл: <a class=”inline” href=”mailto:gdbop@mvr.bg”>gdbop@mvr.bg</a></span>
-        </div>
-        <div style=”display:flex;gap:.9rem;align-items:flex-start;color:var(--text-dim);font-size:.92rem;margin-bottom:1rem”>
-          <svg viewBox=”0 0 24 24” width=”17” height=”17” style=”width:17px;height:17px;min-width:17px;flex-shrink:0;margin-top:3px;fill:none;stroke:#c9a227;stroke-width:1.8”><path d=”M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z”/></svg>
-          <span>Ако желаете да подадете сигнал за киберпрестъпление, моля посетете сайта на дирекция „Киберпрестъпност” при ГДБОП-МВР на адрес <a class=”inline” href=”https://www.cybercrime.bg” target=”_blank” rel=”noopener noreferrer”>www.cybercrime.bg</a></span>
-        </div>
+        <div class=”contact-row addr”><span><strong style=”color:var(--text)”>Главна дирекция „Борба с организираната престъпност”</strong><br>Министерство на вътрешните работи · Република България<br>гр. София, пощенски код 1784<br>бул. „Цариградско шосе” № 133А</span></div>
+        <div class=”contact-row tel”><span>тел.: <a class=”inline” href=”tel:+35929828363”>02/98 28 363</a></span></div>
+        <div class=”contact-row mail”><span>мейл: <a class=”inline” href=”mailto:gdbop@mvr.bg”>gdbop@mvr.bg</a></span></div>
+        <div class=”contact-row cyber”><span>Ако желаете да подадете сигнал за киберпрестъпление, моля посетете сайта на дирекция „Киберпрестъпност” при ГДБОП-МВР на адрес <a class=”inline” href=”https://www.cybercrime.bg” target=”_blank” rel=”noopener noreferrer”>www.cybercrime.bg</a></span></div>
       </div>
       <h3>Приемно време на ръководството</h3>
       <ul class=”hours”>
@@ -115,7 +103,9 @@
       </ul>
     </div>
     <div>
-      <div id=”map-gdbop”></div>
+      <div class=”map-frame”>
+        <iframe src=”https://maps.google.com/maps?q=42.6544631,23.3901836&z=17&output=embed&hl=bg” loading=”lazy” title=”Карта — ГДБОП, бул. „Цариградско шосе” 133А, София”></iframe>
+      </div>
     </div>
   </div>
 </section>
@@ -519,30 +509,6 @@
       if (field) field.classList.remove('error');
     })
   );
-})();
-</script>
-<script src="js/leaflet.js"></script>
-<script>
-(function(){
-  var mapEl = document.getElementById('map-gdbop');
-  if (!mapEl) return;
-  var lat = 42.6693, lon = 23.3729;
-  var map = L.map('map-gdbop', {scrollWheelZoom: false}).setView([lat, lon], 15);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
-  L.marker([lat, lon]).addTo(map)
-    .bindPopup('<strong>ГДБОП — МВР</strong><br>бул. „Цариградско шосе" № 133А<br>гр. София 1784')
-    .openPopup();
-  /* Leaflet needs invalidateSize() once the .reveal section becomes visible */
-  var section = mapEl.closest('section');
-  if (section && window.MutationObserver) {
-    var mo = new MutationObserver(function(){ map.invalidateSize(true); });
-    mo.observe(section, {attributes: true, attributeFilter: ['class']});
-  }
-  /* Fallback: also call after page load in case section is already in view */
-  window.addEventListener('load', function(){ setTimeout(function(){ map.invalidateSize(true); }, 300); });
 })();
 </script>
 </body>

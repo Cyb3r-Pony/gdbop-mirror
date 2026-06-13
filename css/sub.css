@@ -195,6 +195,21 @@ body.menu-open{overflow:hidden}
 .embed-frame.fb{display:flex;justify-content:center}
 .embed-frame.fb iframe{width:340px;max-width:100%}
 
+/* ── contact page: info left + bigger map right ─────────────── */
+.contact-map-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:2.4rem;align-items:start}
+@media(max-width:1060px){.contact-map-grid{grid-template-columns:1fr}}
+.contact-map-grid .map-wrap .embed-frame iframe{height:520px}
+
+/* ── Facebook section (video page) ──────────────────────────── */
+.fb-section-wrap{display:grid;grid-template-columns:1fr 320px;gap:2.4rem;align-items:start}
+@media(max-width:900px){.fb-section-wrap{grid-template-columns:1fr}}
+.embed-frame.fb-page{border:1px solid rgba(255,255,255,.1);background:var(--navy-950);overflow:hidden}
+.embed-frame.fb-page iframe{display:block;border:0;width:100%}
+.fb-info-card{background:var(--navy-800);border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--gold);padding:1.5rem}
+.fb-info-card h3{font-size:1rem;font-weight:700;margin:.5rem 0 .3rem;color:var(--text)}
+.fb-info-card p{font-size:.84rem;color:var(--text-dim);margin-bottom:.6rem;line-height:1.65}
+.fb-info-card .btn{font-size:.72rem;padding:.65rem 1.3rem;margin-top:.4rem}
+
 /* news article */
 .article-meta{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;margin-bottom:1.6rem}
 .article-date{background:var(--navy-950);border-left:3px solid var(--gold);padding:.45rem .9rem;font-size:.72rem;font-weight:700;letter-spacing:.1em}

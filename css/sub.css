@@ -262,3 +262,89 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
   html{scroll-behavior:auto}
 }
+
+/* ═══════════════════════════════════════════════════════════
+   SIGNAL / CONTACT FORM
+   ═══════════════════════════════════════════════════════════ */
+.form-section{margin-top:3rem;padding-top:3rem;border-top:1px solid rgba(255,255,255,.08)}
+.form-lead{color:var(--text-dim);max-width:640px;margin-bottom:2rem;font-size:.95rem;line-height:1.7}
+
+/* row groups */
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem}
+.form-row.two{grid-template-columns:1fr 1fr}
+.form-row.one{grid-template-columns:1fr}
+@media(max-width:640px){.form-row,.form-row.two{grid-template-columns:1fr}}
+
+/* field */
+.form-field{display:flex;flex-direction:column;gap:.38rem}
+.form-field label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim)}
+.form-field label .req{color:var(--gold);margin-left:.2rem}
+.form-field input,.form-field select,.form-field textarea{
+  background:var(--navy-800);
+  border:1px solid rgba(255,255,255,.1);
+  color:var(--text);
+  font-family:inherit;
+  font-size:.88rem;
+  padding:.75rem 1rem;
+  outline:none;
+  transition:border-color .25s,box-shadow .25s;
+  width:100%;
+}
+.form-field input::placeholder,.form-field textarea::placeholder{color:rgba(159,176,198,.45)}
+.form-field select{cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239fb0c6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.4rem}
+.form-field select option{background:var(--navy-950)}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.15)}
+.form-field.error input,.form-field.error select,.form-field.error textarea{border-color:#e05252}
+.form-field .field-error{font-size:.7rem;color:#e05252;margin-top:.2rem;display:none}
+.form-field.error .field-error{display:block}
+.form-field textarea{resize:vertical;min-height:140px}
+
+/* file upload */
+.file-drop{
+  border:2px dashed rgba(201,162,39,.3);
+  background:var(--navy-800);
+  padding:2rem 1.5rem;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color .25s,background .25s;
+  position:relative;
+}
+.file-drop:hover,.file-drop.drag-over{border-color:var(--gold);background:rgba(201,162,39,.06)}
+.file-drop input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.file-drop-icon{font-size:2rem;margin-bottom:.6rem;display:block}
+.file-drop-label{font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:.3rem}
+.file-drop-sub{font-size:.72rem;color:var(--text-dim)}
+.file-list{margin-top:1rem;display:flex;flex-direction:column;gap:.4rem}
+.file-item{display:flex;align-items:center;gap:.75rem;background:var(--navy-700);padding:.5rem .8rem;font-size:.78rem}
+.file-item-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-item-size{color:var(--text-dim);white-space:nowrap;flex-shrink:0}
+.file-item-del{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:1rem;padding:0 .2rem;line-height:1;transition:color .2s;flex-shrink:0}
+.file-item-del:hover{color:#e05252}
+.file-counter{font-size:.72rem;color:var(--text-dim);margin-top:.5rem}
+.file-counter.warn{color:#e08a2a}
+.file-counter.err{color:#e05252}
+
+/* GDPR consent */
+.gdpr-row{display:flex;gap:.75rem;align-items:flex-start;margin-top:1.2rem}
+.gdpr-row input[type="checkbox"]{width:18px;height:18px;flex-shrink:0;margin-top:.12rem;cursor:pointer;accent-color:var(--gold)}
+.gdpr-row label{font-size:.75rem;color:var(--text-dim);line-height:1.55;cursor:pointer}
+.gdpr-row label a{color:var(--gold-light);border-bottom:1px solid var(--line)}
+
+/* honeypot — must stay hidden */
+.hp-field{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+/* submit button area */
+.form-submit-row{display:flex;align-items:center;gap:1.5rem;margin-top:1.8rem;flex-wrap:wrap}
+.form-status{font-size:.82rem;display:none}
+.form-status.success{display:block;color:#4caf87}
+.form-status.error{display:block;color:#e05252}
+
+/* loading state on btn */
+.btn-submit{position:relative;overflow:hidden;min-width:200px}
+.btn-submit.loading{pointer-events:none;opacity:.7}
+.btn-submit .spinner{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.btn-submit.loading .spinner{display:inline-block}
+.btn-submit.loading .btn-text{opacity:0}
+@keyframes spin{to{transform:rotate(360deg)}}

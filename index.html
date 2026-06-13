@@ -2,6 +2,8 @@
 <html lang="bg">
 <head>
 <meta charset="UTF-8">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ГДБОП — Главна дирекция „Борба с организираната престъпност“ | МВР</title>
 <meta name="description" content="Главна дирекция „Борба с организираната престъпност“ — Министерство на вътрешните работи на Република България">
@@ -145,7 +147,7 @@ section{padding:6rem 0}
 .work{background:var(--navy-950);position:relative}
 .work::before{content:"";position:absolute;inset:0;background:radial-gradient(900px 420px at 85% 0%,rgba(201,162,39,.06),transparent 60%);pointer-events:none}
 .work-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.1rem}
-.work-card{position:relative;background:var(--navy-800);border:1px solid rgba(255,255,255,.07);padding:1.9rem 1.7rem 1.7rem;overflow:hidden;transition:transform .35s var(--ease),border-color .35s,box-shadow .35s;cursor:pointer}
+.work-card{text-decoration:none;cursor:pointer;position:relative;background:var(--navy-800);border:1px solid rgba(255,255,255,.07);padding:1.9rem 1.7rem 1.7rem;overflow:hidden;transition:transform .35s var(--ease),border-color .35s,box-shadow .35s;cursor:pointer}
 .work-card::before{content:"";position:absolute;inset:0;background:radial-gradient(220px 220px at var(--mx,50%) var(--my,50%),rgba(201,162,39,.12),transparent 70%);opacity:0;transition:opacity .3s}
 .work-card:hover::before{opacity:1}
 .work-card::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
@@ -269,7 +271,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
 <div class="topbar">
   <div class="topbar-inner">
     <div><span class="flag"></span>Република България &nbsp;·&nbsp; Министерство на вътрешните работи</div>
-    <div class="right">тел. 02/982 83 63 &nbsp;·&nbsp; <a href="https://www.mvr.bg" target="_blank" rel="noopener">www.mvr.bg</a></div>
+    <div class="right">тел. 02/982 83 63 &nbsp;·&nbsp; <a href="https://www.mvr.bg" target="_blank" rel="noopener noreferrer">www.mvr.bg</a></div>
   </div>
 </div>
 
@@ -317,7 +319,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
         </li>
         <li><a href="#novini">Новини</a></li>
         <li><a href="video.html">Видео</a></li>
-        <li><a href="https://gdbop.bg/bg/profil-na-kupuvacha" target="_blank" rel="noopener">Профил на купувача</a></li>
+        <li><a href="https://gdbop.bg/bg/profil-na-kupuvacha" target="_blank" rel="noopener noreferrer">Профил на купувача</a></li>
         <li><a href="kontakti.html">Контакти</a></li>
       </ul>
     </nav>
@@ -381,62 +383,62 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
       <p class="reveal">Десет специализирани направления, обхващащи целия спектър на противодействието на организираната престъпност.</p>
     </div>
     <div class="work-grid">
-      <article class="work-card reveal" onclick="location.href='linii-na-rabota.html#narkotitsi'">
-        <span class="work-num">01</span>
+      <a class="work-card reveal" href="linii-na-rabota.html#narkotitsi">
+      <span class="work-num">01</span>
         <div class="work-icon"><svg viewBox="0 0 24 24"><path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7Z"/><path d="m7 10 7 7"/></svg></div>
         <h3>Наркотици</h3>
         <p>Противодействие на производството, трафика и разпространението на наркотични вещества и прекурсори.</p>
       </article>
-      <article class="work-card reveal" onclick="location.href='linii-na-rabota.html#kulturni-tsennosti'">
-        <span class="work-num">02</span>
+      <a class="work-card reveal" href="linii-na-rabota.html#kulturni-tsennosti">
+      <span class="work-num">02</span>
         <div class="work-icon"><svg viewBox="0 0 24 24"><path d="M12 3 4 7v2h16V7l-8-4Z"/><path d="M6 9v8M10 9v8M14 9v8M18 9v8"/><path d="M4 17h16v3H4Z"/></svg></div>
         <h3>Трафик на културно-исторически ценности</h3>
         <p>Опазване на културното наследство и пресичане на незаконния трафик на антики и ценности.</p>
       </article>
-      <article class="work-card reveal" onclick="location.href='linii-na-rabota.html#kiber'">
-        <span class="work-num">03</span>
+      <a class="work-card reveal" href="linii-na-rabota.html#kiber">
+      <span class="work-num">03</span>
         <div class="work-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="1"/><path d="M8 21h8M12 17v4"/><path d="m8.5 9 2 2 4-4"/></svg></div>
         <h3>Киберпрестъпност</h3>
         <p>Разследване на компютърни престъпления, онлайн измами и злоупотреби в киберпространството.</p>
       </article>
-      <article class="work-card reveal" onclick="location.href='linii-na-rabota.html#trafik-hora'">
-        <span class="work-num">04</span>
+      <a class="work-card reveal" href="linii-na-rabota.html#trafik-hora">
+      <span class="work-num">04</span>
         <div class="work-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a6 6 0 0 1 12 0v2"/><path d="M17 11h5M19.5 8.5 22 11l-2.5 2.5"/></svg></div>
         <h3>Трафик на хора</h3>
         <p>Противодействие на трафика на хора с цел експлоатация и защита на пострадалите лица.</p>
       </article>
-      <article class="work-card reveal" onclick="location.href='linii-na-rabota.html#kontraterorizam'">
-        <span class="work-num">05</span>
+      <a class="work-card reveal" href="linii-na-rabota.html#kontraterorizam">
+      <span class="work-num">05</span>
         <div class="work-icon"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/><path d="m9 12 2 2 4-4"/></svg></div>
         <h3>Контратероризъм</h3>
         <p>Превенция и противодействие на тероризма, радикализацията и неговото финансиране.</p>
       </article>
-      <article class="work-card reveal" onclick="location.href='linii-na-rabota.html#koruptsiya'">
-        <span class="work-num">06</span>
+      <a class="work-card reveal" href="linii-na-rabota.html#koruptsiya">
+      <span class="work-num">06</span>
         <div class="work-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9.5 9.5c0-1 1-1.7 2.5-1.7s2.5.7 2.5 1.7-1 1.4-2.5 1.8-2.5.8-2.5 1.8 1 1.7 2.5 1.7 2.5-.7 2.5-1.7"/></svg></div>
         <h3>Корупция и изпиране на пари</h3>
         <p>Разкриване на корупционни схеми и проследяване на имущество, придобито от престъпна дейност.</p>
       </article>
-      <article class="work-card reveal" onclick="location.href='linii-na-rabota.html#falshifikatsii'">
-        <span class="work-num">07</span>
+      <a class="work-card reveal" href="linii-na-rabota.html#falshifikatsii">
+      <span class="work-num">07</span>
         <div class="work-icon"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="11" rx="1"/><circle cx="12" cy="12.5" r="2.6"/><path d="M3 10c2 0 3-1 3-3M21 10c-2 0-3-1-3-3M3 15c2 0 3 1 3 3M21 15c-2 0-3 1-3 3"/></svg></div>
         <h3>Фалшификации</h3>
         <p>Противодействие на подправянето на парични знаци, документи и платежни инструменти.</p>
       </article>
-      <article class="work-card reveal" onclick="location.href='linii-na-rabota.html#kontrabanda'">
-        <span class="work-num">08</span>
+      <a class="work-card reveal" href="linii-na-rabota.html#kontrabanda">
+      <span class="work-num">08</span>
         <div class="work-icon"><svg viewBox="0 0 24 24"><path d="M3 17h13l3-7H6.5"/><path d="M3 17l2.5-11H3"/><circle cx="8" cy="20" r="1.6"/><circle cx="15" cy="20" r="1.6"/></svg></div>
         <h3>Контрабанда</h3>
         <p>Пресичане на контрабандни канали за акцизни стоки, оръжия и стоки с двойна употреба.</p>
       </article>
-      <article class="work-card reveal" onclick="location.href='linii-na-rabota.html#razsledvane'">
-        <span class="work-num">09</span>
+      <a class="work-card reveal" href="linii-na-rabota.html#razsledvane">
+      <span class="work-num">09</span>
         <div class="work-icon"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/><path d="M8 10.5h5M10.5 8v5"/></svg></div>
         <h3>Разследване</h3>
         <p>Досъдебно производство и процесуални действия по дела за организирана престъпна дейност.</p>
       </article>
-      <article class="work-card reveal" onclick="location.href='linii-na-rabota.html#mkts'">
-        <span class="work-num">10</span>
+      <a class="work-card reveal" href="linii-na-rabota.html#mkts">
+      <span class="work-num">10</span>
         <div class="work-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><circle cx="5" cy="5" r="1.8"/><circle cx="19" cy="5" r="1.8"/><circle cx="5" cy="19" r="1.8"/><circle cx="19" cy="19" r="1.8"/><path d="M6.4 6.4 10 10M17.6 6.4 14 10M6.4 17.6 10 14M17.6 17.6 14 14"/></svg></div>
         <h3>Междуведомствен координационен център</h3>
         <p>Координация между институциите и обмен на оперативна информация в реално време.</p>
@@ -481,7 +483,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
     <p class="reveal">Вашият сигнал може да бъде решаващ. Свържете се с нас — анонимността на подателя се гарантира по реда на закона.</p>
     <div class="btn-row reveal">
       <a class="btn solid" href="kontakti.html"><span>Изпрати съобщение</span></a>
-      <a class="btn ghost" href="https://www.cybercrime.bg" target="_blank" rel="noopener">Сигнал за киберпрестъпление</a>
+      <a class="btn ghost" href="https://www.cybercrime.bg" target="_blank" rel="noopener noreferrer">Сигнал за киберпрестъпление</a>
     </div>
   </div>
 </section>
@@ -494,7 +496,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
         <div class="sec-kicker reveal">Актуално</div>
         <h2 class="reveal">Новини</h2>
       </div>
-      <a class="btn ghost reveal" href="https://gdbop.bg/bg/news" target="_blank" rel="noopener">Всички новини</a>
+      <a class="btn ghost reveal" href="https://gdbop.bg/bg/news" target="_blank" rel="noopener noreferrer">Всички новини</a>
     </div>
     <div class="news-grid">
       <article class="news-card reveal">
@@ -502,7 +504,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
         <div class="news-body">
           <span class="news-tag">Киберпрестъпност</span>
           <h3>ГДБОП неутрализира престъпна група за инвестиционни измами срещу чуждестранни граждани</h3>
-          <a class="news-more" href="novina-investitsionni-izmami.html">Повече</a>
+          <a class="news-more" href="novini/novina-investitsionni-izmami.html">Повече</a>
         </div>
       </article>
       <article class="news-card reveal">
@@ -510,7 +512,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
         <div class="news-body">
           <span class="news-tag">Наркотици</span>
           <h3>ГДБОП разкри лаборатория за метамфетамин в Ямбол</h3>
-          <a class="news-more" href="https://gdbop.bg/bg/news/view/gdbop-razkri-laboratoriya-za-metamfetamin-v-yambol" target="_blank" rel="noopener">Повече</a>
+          <a class="news-more" href="https://gdbop.bg/bg/news/view/gdbop-razkri-laboratoriya-za-metamfetamin-v-yambol" target="_blank" rel="noopener noreferrer">Повече</a>
         </div>
       </article>
       <article class="news-card reveal">
@@ -518,7 +520,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
         <div class="news-body">
           <span class="news-tag">Наркотици</span>
           <h3>Шестима мъже и 400 кг марихуана задържа ГДБОП при Русе</h3>
-          <a class="news-more" href="https://gdbop.bg/bg/news/view/shestima-maje-i-400-kg-marihuana-zadarja-gdbop-pri-ruse" target="_blank" rel="noopener">Повече</a>
+          <a class="news-more" href="https://gdbop.bg/bg/news/view/shestima-maje-i-400-kg-marihuana-zadarja-gdbop-pri-ruse" target="_blank" rel="noopener noreferrer">Повече</a>
         </div>
       </article>
       <article class="news-card reveal">
@@ -526,7 +528,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
         <div class="news-body">
           <span class="news-tag">Изпиране на пари</span>
           <h3>ГДБОП задържа група за престъпления против околната среда и пране на пари</h3>
-          <a class="news-more" href="novina-okolna-sreda.html">Повече</a>
+          <a class="news-more" href="novini/novina-okolna-sreda.html">Повече</a>
         </div>
       </article>
       <article class="news-card reveal">
@@ -534,7 +536,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
         <div class="news-body">
           <span class="news-tag">Културни ценности</span>
           <h3>Самоделни взривни устройства и културни ценности са открити в дом в Стара Загора</h3>
-          <a class="news-more" href="https://gdbop.bg/bg/news/view/samodelni-vzrivni-ustroystva-i-kulturni-tsennosti-sa-otkriti-v-dom-v-stara-zagora" target="_blank" rel="noopener">Повече</a>
+          <a class="news-more" href="https://gdbop.bg/bg/news/view/samodelni-vzrivni-ustroystva-i-kulturni-tsennosti-sa-otkriti-v-dom-v-stara-zagora" target="_blank" rel="noopener noreferrer">Повече</a>
         </div>
       </article>
       <article class="news-card reveal">
@@ -542,7 +544,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
         <div class="news-body">
           <span class="news-tag">Наркотици</span>
           <h3>Служители на ГДБОП разкриха наркооранжерия във Варна</h3>
-          <a class="news-more" href="https://gdbop.bg/bg/news/view/slujiteli-na-gdbop-razkriha-narkooranjeriya-vav-varna" target="_blank" rel="noopener">Повече</a>
+          <a class="news-more" href="https://gdbop.bg/bg/news/view/slujiteli-na-gdbop-razkriha-narkooranjeriya-vav-varna" target="_blank" rel="noopener noreferrer">Повече</a>
         </div>
       </article>
     </div>
@@ -553,12 +555,12 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
 <div class="partners">
   <div class="container">
     <div class="partners-row">
-      <a href="https://www.mvr.bg" target="_blank" rel="noopener">МВР</a>
-      <a href="https://www.mvr.bg/press" target="_blank" rel="noopener">МВР Прес</a>
-      <a href="https://www.cybercrime.bg" target="_blank" rel="noopener">Cybercrime.bg</a>
-      <a href="https://www.spasidete.bg" target="_blank" rel="noopener">Spasidete.bg</a>
-      <a href="https://www.europol.europa.eu" target="_blank" rel="noopener">Европол</a>
-      <a href="https://www.interpol.int" target="_blank" rel="noopener">Интерпол</a>
+      <a href="https://www.mvr.bg" target="_blank" rel="noopener noreferrer">МВР</a>
+      <a href="https://www.mvr.bg/press" target="_blank" rel="noopener noreferrer">МВР Прес</a>
+      <a href="https://www.cybercrime.bg" target="_blank" rel="noopener noreferrer">Cybercrime.bg</a>
+      <a href="https://www.spasidete.bg" target="_blank" rel="noopener noreferrer">Spasidete.bg</a>
+      <a href="https://www.europol.europa.eu" target="_blank" rel="noopener noreferrer">Европол</a>
+      <a href="https://www.interpol.int" target="_blank" rel="noopener noreferrer">Интерпол</a>
     </div>
   </div>
 </div>
@@ -581,18 +583,18 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
         <li><a href="#novini">Новини</a></li>
         <li><a href="video.html">Видео</a></li>
         <li><a href="za-gdbop.html#zakonodatelstvo">Законодателство</a></li>
-        <li><a href="https://www.mvr.bg/dhr" target="_blank" rel="noopener">Конкурси</a></li>
+        <li><a href="https://www.mvr.bg/dhr" target="_blank" rel="noopener noreferrer">Конкурси</a></li>
       </ul>
     </div>
     <div>
       <h4>Бързи връзки</h4>
       <ul>
-        <li><a href="https://www.mvr.bg" target="_blank" rel="noopener">www.mvr.bg</a></li>
-        <li><a href="https://www.mvr.bg/press" target="_blank" rel="noopener">www.mvr.bg/press</a></li>
-        <li><a href="https://www.spasidete.bg" target="_blank" rel="noopener">www.spasidete.bg</a></li>
-        <li><a href="https://www.cybercrime.bg" target="_blank" rel="noopener">www.cybercrime.bg</a></li>
-        <li><a href="https://www.europol.europa.eu" target="_blank" rel="noopener">www.europol.europa.eu</a></li>
-        <li><a href="https://www.interpol.int" target="_blank" rel="noopener">www.interpol.int</a></li>
+        <li><a href="https://www.mvr.bg" target="_blank" rel="noopener noreferrer">www.mvr.bg</a></li>
+        <li><a href="https://www.mvr.bg/press" target="_blank" rel="noopener noreferrer">www.mvr.bg/press</a></li>
+        <li><a href="https://www.spasidete.bg" target="_blank" rel="noopener noreferrer">www.spasidete.bg</a></li>
+        <li><a href="https://www.cybercrime.bg" target="_blank" rel="noopener noreferrer">www.cybercrime.bg</a></li>
+        <li><a href="https://www.europol.europa.eu" target="_blank" rel="noopener noreferrer">www.europol.europa.eu</a></li>
+        <li><a href="https://www.interpol.int" target="_blank" rel="noopener noreferrer">www.interpol.int</a></li>
       </ul>
     </div>
     <div class="footer-contact">

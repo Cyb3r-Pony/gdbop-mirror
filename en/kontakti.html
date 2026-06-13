@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contacts | GDCOC — Ministry of the Interior</title>
 <link rel="icon" href="../images/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
-<link rel="stylesheet" href="../assets/sub.css">
+<link rel="stylesheet" href="../css/sub.css">
 </head>
 <body>
 <div id="progress"></div>
 <div class="topbar">
   <div class="topbar-inner">
     <div><span class="flag"></span>Republic of Bulgaria &nbsp;·&nbsp; Ministry of the Interior</div>
-    <div class="right">tel. +359 2 982 83 63 &nbsp;·&nbsp; <a href="https://www.mvr.bg" target="_blank" rel="noopener">www.mvr.bg</a></div>
+    <div class="right">tel. +359 2 982 83 63 &nbsp;·&nbsp; <a href="https://www.mvr.bg" target="_blank" rel="noopener noreferrer">www.mvr.bg</a></div>
   </div>
 </div>
 <header id="header">
@@ -62,7 +64,7 @@
         </li>
         <li><a href="index.html#novini">News</a></li>
         <li><a href="video.html">Video</a></li>
-        <li><a href="https://gdbop.bg/bg/profil-na-kupuvacha" target="_blank" rel="noopener">Buyer Profile</a></li>
+        <li><a href="https://gdbop.bg/bg/profil-na-kupuvacha" target="_blank" rel="noopener noreferrer">Buyer Profile</a></li>
         <li class="active"><a href="kontakti.html">Contacts</a></li>
       </ul>
     </nav>
@@ -88,7 +90,7 @@
         <p><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg><span><strong style="color:var(--text)">General Directorate Combating Organised Crime</strong><br>Ministry of the Interior · Republic of Bulgaria<br>133A Tsarigradsko Shose Blvd.<br>1784 Sofia</span></p>
         <p><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg><span>tel.: <a class="inline" href="tel:+35929828363">+359 2 98 28 363</a></span></p>
         <p><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>email: <a class="inline" href="mailto:gdbop@mvr.bg">gdbop@mvr.bg</a></span></p>
-        <p><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/></svg><span>If you wish to report a cybercrime, please visit the website of the Cybercrime Directorate at GDCOC-MoI at <a class="inline" href="https://www.cybercrime.bg" target="_blank" rel="noopener">www.cybercrime.bg</a></span></p>
+        <p><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/></svg><span>If you wish to report a cybercrime, please visit the website of the Cybercrime Directorate at GDCOC-MoI at <a class="inline" href="https://www.cybercrime.bg" target="_blank" rel="noopener noreferrer">www.cybercrime.bg</a></span></p>
       </div>
       <h3>Office Hours of the Leadership</h3>
       <ul class="hours">
@@ -103,9 +105,114 @@
       <div class="embed-frame fb reveal">
         <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fgdbop.bg&tabs=timeline&width=340&height=560&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=false" height="560" loading="lazy" title="GDCOC Facebook page" allow="encrypted-media"></iframe>
       </div>
-      <p style="margin-top:.8rem"><a class="inline" style="color:var(--gold-light);border-bottom:1px solid var(--line)" href="https://www.facebook.com/gdbop.bg" target="_blank" rel="noopener">GDCOC Facebook page ↗</a></p>
+      <p style="margin-top:.8rem"><a class="inline" style="color:var(--gold-light);border-bottom:1px solid var(--line)" href="https://www.facebook.com/gdbop.bg" target="_blank" rel="noopener noreferrer">GDCOC Facebook page ↗</a></p>
     </div>
   </div>
+</section>
+
+<!-- ═══════════════ SIGNAL FORM (EN) ═══════════════ -->
+<section class="form-section reveal" id="signal">
+  <div class="sec-kicker">TIPS &amp; ENQUIRIES</div>
+  <h2>Submit a Tip or Enquiry</h2>
+  <p class="form-lead">Use this form to send a tip, complaint or enquiry to the General Directorate Combating Organised Crime. You may attach images or documents as evidence. Fields marked with <span style="color:var(--gold)">*</span> are required.</p>
+
+  <form id="signal-form" novalidate>
+    <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
+    <input type="hidden" name="subject" id="email-subject" value="Tip/Enquiry from GDCOC website">
+    <input type="hidden" name="from_name" value="GDCOC — Contact Form">
+    <input type="hidden" name="redirect" value="false">
+    <input type="hidden" name="botcheck" value="">
+
+    <div class="hp-field" aria-hidden="true">
+      <label>Do not fill this field</label>
+      <input type="text" name="website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="form-row">
+      <div class="form-field" id="field-ime">
+        <label for="ime">First name <span class="req">*</span></label>
+        <input type="text" id="ime" name="First_name" placeholder="John" autocomplete="given-name" maxlength="80">
+        <div class="field-error">Please enter your first name.</div>
+      </div>
+      <div class="form-field" id="field-prezime">
+        <label for="prezime">Middle name <span class="req">*</span></label>
+        <input type="text" id="prezime" name="Middle_name" placeholder="Andrew" autocomplete="additional-name" maxlength="80">
+        <div class="field-error">Please enter your middle name.</div>
+      </div>
+      <div class="form-field" id="field-familiya">
+        <label for="familiya">Last name <span class="req">*</span></label>
+        <input type="text" id="familiya" name="Last_name" placeholder="Smith" autocomplete="family-name" maxlength="80">
+        <div class="field-error">Please enter your last name.</div>
+      </div>
+    </div>
+
+    <div class="form-row two">
+      <div class="form-field" id="field-email">
+        <label for="email">Email address <span class="req">*</span></label>
+        <input type="email" id="email" name="email" placeholder="john@example.com" autocomplete="email" maxlength="120">
+        <div class="field-error">Please enter a valid email address.</div>
+      </div>
+      <div class="form-field" id="field-telefon">
+        <label for="telefon">Phone number</label>
+        <input type="tel" id="telefon" name="Phone" placeholder="+359 88 888 8888" autocomplete="tel" maxlength="30">
+      </div>
+    </div>
+
+    <div class="form-row one">
+      <div class="form-field" id="field-tema">
+        <label for="tema">Subject <span class="req">*</span></label>
+        <select id="tema" name="Subject">
+          <option value="" disabled selected>— Select subject —</option>
+          <option value="Crime tip">Crime tip</option>
+          <option value="Complaint">Complaint</option>
+          <option value="Public information request">Public information request</option>
+          <option value="Media enquiry">Media enquiry</option>
+          <option value="Other">Other</option>
+        </select>
+        <div class="field-error">Please select a subject.</div>
+      </div>
+    </div>
+
+    <div class="form-row one">
+      <div class="form-field" id="field-saobshtenie">
+        <label for="saobshtenie">Message <span class="req">*</span></label>
+        <textarea id="saobshtenie" name="Message" placeholder="Describe your tip or enquiry in detail…" maxlength="5000"></textarea>
+        <div class="field-error">Please enter a message (min. 20 characters).</div>
+      </div>
+    </div>
+
+    <div class="form-row one">
+      <div class="form-field">
+        <label>Attach files <span style="font-weight:400;text-transform:none;font-size:.68rem;color:var(--text-dim)">(optional — up to 10 files, max 5 MB each, 15 MB total)</span></label>
+        <div class="file-drop" id="file-drop">
+          <input type="file" id="file-input" name="attachment[]" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" aria-label="Attach files">
+          <span class="file-drop-icon">📎</span>
+          <div class="file-drop-label">Drag files here or click to browse</div>
+          <div class="file-drop-sub">JPG, PNG, PDF, DOC, DOCX, XLS, ZIP and more</div>
+        </div>
+        <div class="file-list" id="file-list"></div>
+        <div class="file-counter" id="file-counter"></div>
+      </div>
+    </div>
+
+    <div class="gdpr-row">
+      <input type="checkbox" id="gdpr" name="gdpr_consent" value="yes">
+      <label for="gdpr">
+        I consent to my personal data (full name, email, phone) being processed by GDCOC-MoI solely for the purpose of handling my submission, in accordance with <a href="https://www.mvr.bg" target="_blank" rel="noopener noreferrer">MoI Privacy Policy</a> and Regulation (EU) 2016/679 (GDPR). <span class="req" style="color:var(--gold)">*</span>
+      </label>
+    </div>
+    <div class="form-field" id="field-gdpr" style="margin-top:.3rem">
+      <div class="field-error" style="display:none" id="gdpr-error">You must consent to the processing of your personal data.</div>
+    </div>
+
+    <div class="form-submit-row">
+      <button type="submit" class="btn btn-submit" id="submit-btn">
+        <span class="spinner"></span>
+        <span class="btn-text">Send message →</span>
+      </button>
+      <div class="form-status" id="form-status"></div>
+    </div>
+  </form>
 </section>
 
     </div>
@@ -132,24 +239,140 @@
     <div>
       <h4>Quick Links</h4>
       <ul>
-        <li><a href="https://www.mvr.bg" target="_blank" rel="noopener">www.mvr.bg</a></li>
-        <li><a href="https://www.mvr.bg/press" target="_blank" rel="noopener">www.mvr.bg/press</a></li>
-        <li><a href="https://www.spasidete.bg" target="_blank" rel="noopener">www.spasidete.bg</a></li>
-        <li><a href="https://www.cybercrime.bg" target="_blank" rel="noopener">www.cybercrime.bg</a></li>
-        <li><a href="https://www.europol.europa.eu" target="_blank" rel="noopener">www.europol.europa.eu</a></li>
-        <li><a href="https://www.interpol.int" target="_blank" rel="noopener">www.interpol.int</a></li>
+        <li><a href="https://www.mvr.bg" target="_blank" rel="noopener noreferrer">www.mvr.bg</a></li>
+        <li><a href="https://www.mvr.bg/press" target="_blank" rel="noopener noreferrer">www.mvr.bg/press</a></li>
+        <li><a href="https://www.spasidete.bg" target="_blank" rel="noopener noreferrer">www.spasidete.bg</a></li>
+        <li><a href="https://www.cybercrime.bg" target="_blank" rel="noopener noreferrer">www.cybercrime.bg</a></li>
+        <li><a href="https://www.europol.europa.eu" target="_blank" rel="noopener noreferrer">www.europol.europa.eu</a></li>
+        <li><a href="https://www.interpol.int" target="_blank" rel="noopener noreferrer">www.interpol.int</a></li>
       </ul>
     </div>
     <div class="footer-contact">
       <h4>Contacts</h4>
       <p><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>133A Tsarigradsko Shose Blvd.,<br>1784 Sofia, Bulgaria</p>
       <p><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>+359 2 982 83 63</p>
-      <a class="btn" href="kontakti.html">Send a Message</a>
+      <a class="btn" href="kontakti.html#signal">Send a Message</a>
     </div>
   </div>
   <div class="footer-bottom">© 2026 GDCOC — Ministry of the Interior. All rights reserved.</div>
 </footer>
 <button id="toTop" aria-label="Back to top">↑</button>
-<script src="../assets/sub.js"></script>
+<script src="../js/sub.js"></script>
+<script>
+/* ─── SIGNAL FORM (EN) ────────────────────────────────────────────────── */
+(function(){
+  const form      = document.getElementById('signal-form');
+  const fileInput = document.getElementById('file-input');
+  const fileDrop  = document.getElementById('file-drop');
+  const fileList  = document.getElementById('file-list');
+  const fileCounter = document.getElementById('file-counter');
+  const submitBtn = document.getElementById('submit-btn');
+  const formStatus = document.getElementById('form-status');
+
+  const MAX_FILES = 10, MAX_FILE_MB = 5, MAX_TOTAL_MB = 15;
+  let selectedFiles = [];
+
+  ['dragover','dragenter'].forEach(ev => fileDrop.addEventListener(ev, e => {
+    e.preventDefault(); fileDrop.classList.add('drag-over');
+  }));
+  ['dragleave','drop'].forEach(ev => fileDrop.addEventListener(ev, e => {
+    e.preventDefault(); fileDrop.classList.remove('drag-over');
+  }));
+  fileDrop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+  fileInput.addEventListener('change', () => { addFiles(fileInput.files); fileInput.value = ''; });
+
+  function addFiles(incoming) {
+    const ALLOWED = /\.(jpg|jpeg|png|gif|webp|bmp|pdf|doc|docx|xls|xlsx|ppt|pptx|txt|zip)$/i;
+    Array.from(incoming).forEach(f => {
+      if (selectedFiles.length >= MAX_FILES) return;
+      if (!ALLOWED.test(f.name)) { alert(`File format "${f.name}" is not supported.`); return; }
+      if (f.size > MAX_FILE_MB * 1024 * 1024) { alert(`"${f.name}" exceeds ${MAX_FILE_MB} MB.`); return; }
+      const total = selectedFiles.reduce((s,x)=>s+x.size,0) + f.size;
+      if (total > MAX_TOTAL_MB * 1024 * 1024) { alert(`Total size would exceed ${MAX_TOTAL_MB} MB.`); return; }
+      if (!selectedFiles.find(x => x.name===f.name && x.size===f.size)) selectedFiles.push(f);
+    });
+    renderFileList();
+  }
+
+  function renderFileList() {
+    fileList.innerHTML = '';
+    selectedFiles.forEach((f, i) => {
+      const item = document.createElement('div');
+      item.className = 'file-item';
+      item.innerHTML = `<span class="file-item-name" title="${f.name}">${f.name}</span>
+        <span class="file-item-size">${(f.size/1024/1024).toFixed(2)} MB</span>
+        <button type="button" class="file-item-del" aria-label="Remove ${f.name}" data-i="${i}">✕</button>`;
+      fileList.appendChild(item);
+    });
+    fileList.querySelectorAll('.file-item-del').forEach(btn =>
+      btn.addEventListener('click', () => { selectedFiles.splice(+btn.dataset.i, 1); renderFileList(); })
+    );
+    const total = selectedFiles.reduce((s,x)=>s+x.size,0) / 1024 / 1024;
+    const rem = MAX_FILES - selectedFiles.length;
+    fileCounter.textContent = selectedFiles.length
+      ? `${selectedFiles.length} file(s) | ${total.toFixed(2)} MB | ${rem} slot(s) remaining`
+      : '';
+    fileCounter.className = 'file-counter' + (total > MAX_TOTAL_MB * .8 ? (total >= MAX_TOTAL_MB ? ' err' : ' warn') : '');
+  }
+
+  function validate() {
+    let ok = true;
+    const rules = [
+      { id: 'field-ime',        test: () => document.getElementById('ime').value.trim().length > 0 },
+      { id: 'field-prezime',    test: () => document.getElementById('prezime').value.trim().length > 0 },
+      { id: 'field-familiya',   test: () => document.getElementById('familiya').value.trim().length > 0 },
+      { id: 'field-email',      test: () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value.trim()) },
+      { id: 'field-tema',       test: () => document.getElementById('tema').value !== '' },
+      { id: 'field-saobshtenie',test: () => document.getElementById('saobshtenie').value.trim().length >= 20 },
+    ];
+    rules.forEach(r => {
+      const field = document.getElementById(r.id);
+      if (!field) return;
+      r.test() ? field.classList.remove('error') : (field.classList.add('error'), ok = false);
+    });
+    const gdprOk = document.getElementById('gdpr').checked;
+    document.getElementById('gdpr-error').style.display = gdprOk ? 'none' : 'block';
+    if (!gdprOk) ok = false;
+    if (form.querySelector('[name="website"]').value) ok = false;
+    return ok;
+  }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!validate()) {
+      form.querySelector('.form-field.error input, .form-field.error select, .form-field.error textarea')
+          ?.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+    document.getElementById('email-subject').value =
+      `[GDCOC] ${document.getElementById('tema').value} — from ${document.getElementById('ime').value.trim()} ${document.getElementById('familiya').value.trim()}`;
+
+    submitBtn.classList.add('loading');
+    formStatus.className = 'form-status';
+    formStatus.textContent = '';
+
+    const fd = new FormData(form);
+    fd.delete('attachment[]');
+    selectedFiles.forEach(f => fd.append('attachment[]', f, f.name));
+
+    try {
+      const res  = await fetch('https://api.web3forms.com/submit', { method:'POST', body: fd });
+      const data = await res.json();
+      if (data.success) {
+        formStatus.className = 'form-status success';
+        formStatus.textContent = '✓ Your message was sent successfully. We will follow up if necessary.';
+        form.reset(); selectedFiles = []; renderFileList();
+      } else { throw new Error(data.message); }
+    } catch {
+      formStatus.className = 'form-status error';
+      formStatus.textContent = '✗ Sending failed. Please try again or contact us at gdbop@mvr.bg';
+    } finally { submitBtn.classList.remove('loading'); }
+  });
+
+  form.querySelectorAll('input,select,textarea').forEach(el =>
+    el.addEventListener('input', () => el.closest('.form-field')?.classList.remove('error'))
+  );
+})();
+</script>
 </body>
 </html>

@@ -196,9 +196,13 @@ body.menu-open{overflow:hidden}
 .embed-frame.fb iframe{width:340px;max-width:100%}
 
 /* ── contact page: info left + bigger map right ─────────────── */
-.contact-map-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:2.4rem;align-items:start}
-@media(max-width:1060px){.contact-map-grid{grid-template-columns:1fr}}
-.contact-map-grid .map-wrap .embed-frame iframe{height:520px}
+.page-body.single.contact-wide{max-width:1080px}
+.contact-map-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:2.8rem;align-items:start}
+@media(max-width:860px){.contact-map-grid{grid-template-columns:1fr}}
+.contact-map-grid .map-wrap{display:flex;flex-direction:column}
+.contact-map-grid .map-wrap .embed-frame{flex:1}
+.contact-map-grid .map-wrap .embed-frame iframe{height:520px !important}
+.contact-card svg{width:17px !important;height:17px !important}
 
 /* ── Facebook section (video page) ──────────────────────────── */
 .fb-section-wrap{display:grid;grid-template-columns:1fr 320px;gap:2.4rem;align-items:start}

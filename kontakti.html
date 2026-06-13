@@ -110,8 +110,8 @@
       </div>
       <h3>Приемно време на ръководството</h3>
       <ul class=”hours”>
-        <li><b>Директор на ГДБОП-МВР</b>всеки вторник от 10:00 до 12:00 часа</li>
-        <li><b>Заместник-директори на ГДБОП-МВР</b>понеделник, сряда, четвъртък и петък от 10:00 до 12:00 часа</li>
+        <li><b>Директор на ГДБОП-МВР</b> — всеки вторник от 10:00 до 12:00 часа</li>
+        <li><b>Заместник-директори на ГДБОП-МВР</b> — понеделник, сряда, четвъртък и петък от 10:00 до 12:00 часа</li>
       </ul>
     </div>
     <div>
@@ -535,6 +535,14 @@
   L.marker([lat, lon]).addTo(map)
     .bindPopup('<strong>ГДБОП — МВР</strong><br>бул. „Цариградско шосе" № 133А<br>гр. София 1784')
     .openPopup();
+  /* Leaflet needs invalidateSize() once the .reveal section becomes visible */
+  var section = mapEl.closest('section');
+  if (section && window.MutationObserver) {
+    var mo = new MutationObserver(function(){ map.invalidateSize(true); });
+    mo.observe(section, {attributes: true, attributeFilter: ['class']});
+  }
+  /* Fallback: also call after page load in case section is already in view */
+  window.addEventListener('load', function(){ setTimeout(function(){ map.invalidateSize(true); }, 300); });
 })();
 </script>
 </body>

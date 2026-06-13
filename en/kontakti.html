@@ -110,8 +110,8 @@
       </div>
       <h3>Office Hours of the Leadership</h3>
       <ul class="hours">
-        <li><b>Director of GDCOC-MoI</b>every Tuesday from 10:00 to 12:00</li>
-        <li><b>Deputy Directors of GDCOC-MoI</b>Monday, Wednesday, Thursday and Friday from 10:00 to 12:00</li>
+        <li><b>Director of GDCOC-MoI</b> — every Tuesday from 10:00 to 12:00</li>
+        <li><b>Deputy Directors of GDCOC-MoI</b> — Monday, Wednesday, Thursday and Friday from 10:00 to 12:00</li>
       </ul>
     </div>
     <div>
@@ -421,6 +421,12 @@
   L.marker([lat, lon]).addTo(map)
     .bindPopup('<strong>GDCOC — MoI</strong><br>133A Tsarigradsko Shose Blvd.<br>1784 Sofia')
     .openPopup();
+  var section = mapEl.closest('section');
+  if (section && window.MutationObserver) {
+    var mo = new MutationObserver(function(){ map.invalidateSize(true); });
+    mo.observe(section, {attributes: true, attributeFilter: ['class']});
+  }
+  window.addEventListener('load', function(){ setTimeout(function(){ map.invalidateSize(true); }, 300); });
 })();
 </script>
 </body>

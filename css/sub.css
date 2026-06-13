@@ -187,9 +187,10 @@ body.menu-open{overflow:hidden}
 .contact-card svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:1.8;flex-shrink:0;margin-top:4px}
 .contact-card a.inline{color:var(--gold-light);border-bottom:1px solid var(--line)}
 .contact-card a.inline:hover{color:#fff;border-bottom-color:#fff}
-.hours{margin-top:.4rem}
-.hours li{padding:.9rem 0;border-top:1px solid rgba(255,255,255,.07);font-size:.88rem;color:var(--text-dim)}
-.hours li b{color:var(--text);display:block;margin-bottom:.2rem}
+.hours{margin-top:.8rem;padding-left:0}
+.hours li{position:relative;padding:.75rem 0 .75rem 1.4rem;border-top:1px solid rgba(255,255,255,.07);font-size:.88rem;color:var(--text-dim);line-height:1.55}
+.hours li::before{content:"•";position:absolute;left:0;color:var(--gold);font-size:1.1rem;line-height:1.45}
+.hours li b{color:var(--text);display:inline;font-weight:700}
 .embed-frame{border:1px solid rgba(255,255,255,.1);background:var(--navy-950);overflow:hidden}
 .embed-frame iframe{display:block;border:0;width:100%}
 .embed-frame.fb{display:flex;justify-content:center}

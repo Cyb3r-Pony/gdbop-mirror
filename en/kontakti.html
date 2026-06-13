@@ -11,7 +11,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
 <link rel="stylesheet" href="../css/sub.css">
+<link rel="stylesheet" href="../css/leaflet.css">
 <style>
+#map-gdbop{height:520px;width:100%;border-radius:4px;z-index:0}
 @media(max-width:860px){.contact-grid-inline{grid-template-columns:1fr !important}}
 </style>
 </head>
@@ -113,9 +115,7 @@
       </ul>
     </div>
     <div>
-      <div class="embed-frame reveal">
-        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=23.358%2C42.659%2C23.388%2C42.679&layer=mapnik&marker=42.6693%2C23.3729" style="height:520px;width:100%;display:block;border:0" loading="lazy" title="Map — GDCOC, 133A Tsarigradsko Shose Blvd., Sofia"></iframe>
-      </div>
+      <div id="map-gdbop"></div>
     </div>
   </div>
 </section>
@@ -405,6 +405,22 @@
   });
 
   form.querySelectorAll('input,select,textarea').forEach(el => el.addEventListener('input', () => el.closest('.form-field')?.classList.remove('error')));
+})();
+</script>
+<script src="../js/leaflet.js"></script>
+<script>
+(function(){
+  var mapEl = document.getElementById('map-gdbop');
+  if (!mapEl) return;
+  var lat = 42.6693, lon = 23.3729;
+  var map = L.map('map-gdbop', {scrollWheelZoom: false}).setView([lat, lon], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+  L.marker([lat, lon]).addTo(map)
+    .bindPopup('<strong>GDCOC — MoI</strong><br>133A Tsarigradsko Shose Blvd.<br>1784 Sofia')
+    .openPopup();
 })();
 </script>
 </body>

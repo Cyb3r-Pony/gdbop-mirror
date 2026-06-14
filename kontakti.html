@@ -14,6 +14,9 @@
 <style>
 .map-frame{height:520px;border-radius:4px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
 .map-frame iframe{width:100%;height:100%;display:block;border:0}
+.map-btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;width:100%;margin-top:.9rem;padding:.85rem 1rem;background:var(--gold);color:var(--navy-950);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;border:1px solid var(--gold);border-radius:4px;cursor:pointer;transition:all .25s}
+.map-btn:hover{background:transparent;color:var(--gold)}
+.map-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:860px){.contact-grid-inline{grid-template-columns:1fr !important}}
 </style>
 </head>
@@ -86,26 +89,29 @@
   <div class="article contact-article">
 
 <section>
-  <div class=”sec-kicker”>ГДБОП-МВР</div>
+  <div class="sec-kicker">ГДБОП-МВР</div>
   <h2>Свържете се с нас</h2>
-  <div class=”contact-grid-inline” style=”display:grid;grid-template-columns:1fr 1.2fr;gap:3rem;align-items:start;margin-top:1rem”>
+  <div class="contact-grid-inline" style="display:grid;grid-template-columns:1fr 1.2fr;gap:3rem;align-items:start;margin-top:1rem">
     <div>
-      <div class=”contact-card”>
-        <div class=”contact-row addr”><span><strong style=”color:var(--text)”>Главна дирекция „Борба с организираната престъпност”</strong><br>Министерство на вътрешните работи · Република България<br>гр. София, пощенски код 1784<br>бул. „Цариградско шосе” № 133А</span></div>
-        <div class=”contact-row tel”><span>тел.: <a class=”inline” href=”tel:+35929828363”>02/98 28 363</a></span></div>
-        <div class=”contact-row mail”><span>мейл: <a class=”inline” href=”mailto:gdbop@mvr.bg”>gdbop@mvr.bg</a></span></div>
-        <div class=”contact-row cyber”><span>Ако желаете да подадете сигнал за киберпрестъпление, моля посетете сайта на дирекция „Киберпрестъпност” при ГДБОП-МВР на адрес <a class=”inline” href=”https://www.cybercrime.bg” target=”_blank” rel=”noopener noreferrer”>www.cybercrime.bg</a></span></div>
+      <div class="contact-card">
+        <div class="contact-row addr"><span><strong style="color:var(--text)">Главна дирекция „Борба с организираната престъпност”</strong><br>Министерство на вътрешните работи · Република България<br>гр. София, пощенски код 1784<br>бул. „Цариградско шосе” № 133А</span></div>
+        <div class="contact-row tel"><span>тел.: <a class="inline" href="tel:+35929828363">02/98 28 363</a></span></div>
+        <div class="contact-row mail"><span>мейл: <a class="inline" href="mailto:gdbop@mvr.bg">gdbop@mvr.bg</a></span></div>
+        <div class="contact-row cyber"><span>Ако желаете да подадете сигнал за киберпрестъпление, моля посетете сайта на дирекция „Киберпрестъпност” при ГДБОП-МВР на адрес <a class="inline" href="https://www.cybercrime.bg" target="_blank" rel="noopener noreferrer">www.cybercrime.bg</a></span></div>
       </div>
       <h3>Приемно време на ръководството</h3>
-      <ul class=”hours”>
+      <ul class="hours">
         <li><b>Директор на ГДБОП-МВР</b> — всеки вторник от 10:00 до 12:00 часа</li>
         <li><b>Заместник-директори на ГДБОП-МВР</b> — понеделник, сряда, четвъртък и петък от 10:00 до 12:00 часа</li>
       </ul>
     </div>
     <div>
-      <div class=”map-frame”>
-        <iframe src=”https://www.openstreetmap.org/export/embed.html?bbox=23.3878%2C42.6525%2C23.3925%2C42.6565&layer=mapnik&marker=42.6544631%2C23.3901836” width=”100%” height=”520” allowfullscreen title=”Карта — ГДБОП, бул. „Цариградско шосе” 133А, София” style=”border:0;display:block;width:100%;height:520px”></iframe>
+      <div class="map-frame">
+        <iframe src="https://maps.google.com/maps?q=42.6544631,23.3901836&z=16&hl=bg&output=embed" width="100%" height="520" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Карта — ГДБОП, бул. „Цариградско шосе” 133А, София" style="border:0;display:block;width:100%;height:520px"></iframe>
       </div>
+      <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=42.6544631%2C23.3901836" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>Упътване в Google Maps
+      </a>
     </div>
   </div>
 </section>

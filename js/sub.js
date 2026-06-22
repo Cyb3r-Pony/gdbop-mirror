@@ -12,7 +12,7 @@ if(toTop)toTop.onclick=()=>scrollTo({top:0,behavior:'smooth'});
 const io=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting){e.target.classList.add('revealed');io.unobserve(e.target)}
 }),{threshold:.1});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+if('IntersectionObserver' in window){document.querySelectorAll('.reveal').forEach(el=>io.observe(el));}else{document.querySelectorAll('.reveal').forEach(el=>el.classList.add('revealed'));}
 
 // side-nav current section highlight
 const secs=[...document.querySelectorAll('.article section[id]')];

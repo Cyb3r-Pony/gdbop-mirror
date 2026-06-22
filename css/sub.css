@@ -97,7 +97,7 @@ body.menu-open{overflow:hidden}
 
 /* figure */
 .figure{position:relative;margin:2rem 0;border:1px solid rgba(255,255,255,.1);overflow:hidden}
-.figure img{width:100%;transition:transform .8s var(--ease)}
+.figure img{width:100%;height:auto;transition:transform .8s var(--ease)}
 .figure:hover img{transform:scale(1.04)}
 .figure .cap{position:absolute;left:0;right:0;bottom:0;padding:1rem 1.3rem;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);background:linear-gradient(transparent,rgba(7,15,29,.92))}
 .media-split{display:grid;grid-template-columns:1fr 1fr;gap:2.4rem;align-items:start}
@@ -376,3 +376,6 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
 .article p,.leader-hero p,.tl-item p,.callout,.acc-a-inner p,.feature-card .body p,.fb-info-card p{text-align:justify;text-justify:inter-word;-webkit-hyphens:auto;hyphens:auto;text-wrap:pretty}
 .article h1,.article h2,.article h3,.article h4,.page-hero h1,.page-hero p,.leader-hero h3{text-wrap:balance}
 .article li,.acc-a-inner li,.dash li{text-wrap:pretty}
+
+/* Anchored sections: clear the sticky header + reserve image space so #links land correctly */
+.line-sec,.article section[id]{scroll-margin-top:100px}

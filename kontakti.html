@@ -18,6 +18,15 @@
 .map-btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;width:100%;margin-top:.9rem;padding:.85rem 1rem;background:var(--gold);color:var(--navy-950);font-size:.74rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;border:1px solid var(--gold);border-radius:4px;cursor:pointer;transition:all .25s}
 .map-btn:hover{background:transparent;color:var(--gold)}
 .map-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.contact-row.info::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9a227' stroke-width='1.8'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v5M12 8h.01'/%3E%3C/svg%3E")}
+.data-note{margin-top:1.4rem;background:var(--navy-800);border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--gold);padding:1.4rem 1.6rem}
+.data-note h4{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 .7rem}
+.data-note p{color:var(--text-dim);font-size:.9rem;margin:0 0 .6rem;line-height:1.6}
+.data-note ul{list-style:none;margin:0;padding:0}
+.data-note li{position:relative;padding:.45rem 0 .45rem 1.3rem;color:var(--text-dim);font-size:.9rem;border-top:1px solid rgba(255,255,255,.06)}
+.data-note li:first-child{border-top:0}
+.data-note li::before{content:'\2022';position:absolute;left:0;color:var(--gold)}
+.data-note li b{color:var(--text)}
 @media(max-width:860px){.contact-grid-inline{grid-template-columns:1fr !important}}
 </style>
 </head>
@@ -34,8 +43,7 @@
     <a class="brand" href="index.html">
       <img src="images/logo.png" alt="Емблема на ГДБОП">
       <div class="brand-text">
-        <div class="sup">Министерство на вътрешните работи</div>
-        <div class="main"><b>ГДБОП</b></div>
+        <div class="main" style="font-size:clamp(1.15rem,4vw,1.5rem)"><b>ГДБОП</b></div>
       </div>
     </a>
     <a class="lang-btn" href="en/kontakti.html" lang="en" hreflang="en" title="English version">EN</a>
@@ -97,8 +105,20 @@
       <div class="contact-card">
         <div class="contact-row addr"><span><strong style="color:var(--text)">Главна дирекция „Борба с организираната престъпност”</strong><br>Министерство на вътрешните работи · Република България<br>гр. София, пощенски код 1784<br>бул. „Цариградско шосе” № 133А</span></div>
         <div class="contact-row tel"><span>тел.: <a class="inline" href="tel:+35929828363">02/98 28 363</a></span></div>
-        <div class="contact-row mail"><span>мейл: <a class="inline" href="mailto:gdbop@mvr.bg">gdbop@mvr.bg</a></span></div>
-        <div class="contact-row cyber"><span>Ако желаете да подадете сигнал за киберпрестъпление, моля посетете сайта на дирекция „Киберпрестъпност” при ГДБОП-МВР на адрес <a class="inline" href="https://www.cybercrime.bg" target="_blank" rel="noopener noreferrer">www.cybercrime.bg</a></span></div>
+        <div class="contact-row mail"><span>За сигнал за <strong style="color:var(--text)">конвенционално престъпление</strong> изпратете цялата налична информация и данни на <a class="inline" href="mailto:gdbop@mvr.bg">gdbop@mvr.bg</a>.</span></div>
+        <div class="contact-row cyber"><span>За сигнал за <strong style="color:var(--text)">киберпрестъпление</strong> изпратете цялата налична информация и данни на <a class="inline" href="mailto:report@cybercrime.bg">report@cybercrime.bg</a>.</span></div>
+        <div class="contact-row info"><span>Ако не сте сигурни какъв вид престъпление подавате, вижте раздел <a class="inline" href="linii-na-rabota.html">„Линии на работа“</a> в горното меню.</span></div>
+      </div>
+      <div class="data-note">
+        <h4>Необходими лични данни</h4>
+        <p>При подаване на сигнал гражданинът следва да предостави следните лични данни:</p>
+        <ul>
+          <li><b>Трите имена</b></li>
+          <li><b>ЕГН</b> (единен граждански номер)</li>
+          <li><b>Телефон</b> — за бърза и ефективна комуникация</li>
+          <li><b>Имейл</b> за контакт</li>
+          <li><b>Настоящ адрес</b> на пребиваване</li>
+        </ul>
       </div>
       <h3>Приемно време на ръководството</h3>
       <ul class="hours">
@@ -117,120 +137,7 @@
   </div>
 </section>
 
-<!-- ═══════════════ SIGNAL FORM ═══════════════ -->
-<section class="form-section reveal" id="signal">
-  <div class="sec-kicker">СИГНАЛИ И ЗАПИТВАНИЯ</div>
-  <h2>Изпрати сигнал или запитване</h2>
-  <p class="form-lead">Използвайте формата по-долу, за да изпратите сигнал, жалба или запитване до Главна дирекция „Борба с организираната престъпност". Можете да прикачите снимки или документи като доказателство. Всички полета, отбелязани с <span style="color:var(--gold)">*</span>, са задължителни.</p>
 
-  <form id="signal-form" novalidate>
-    <!-- Web3Forms access key — replace YOUR_ACCESS_KEY with the key from web3forms.com -->
-    <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
-    <input type="hidden" name="subject" id="email-subject" value="Сигнал/Запитване от сайта на ГДБОП">
-    <input type="hidden" name="from_name" value="ГДБОП — Форма за сигнали">
-    <input type="hidden" name="redirect" value="false">
-    <input type="hidden" name="botcheck" value="">
-
-    <!-- Honeypot — invisible to humans, traps bots -->
-    <div class="hp-field" aria-hidden="true">
-      <label>Не попълвайте това поле</label>
-      <input type="text" name="website" tabindex="-1" autocomplete="off">
-    </div>
-
-    <!-- NAMES -->
-    <div class="form-row">
-      <div class="form-field" id="field-ime">
-        <label for="ime">Първо име <span class="req">*</span></label>
-        <input type="text" id="ime" name="Първо_име" placeholder="Иван" autocomplete="given-name" maxlength="80">
-        <div class="field-error">Моля, въведете първото си име.</div>
-      </div>
-      <div class="form-field" id="field-prezime">
-        <label for="prezime">Презиме <span class="req">*</span></label>
-        <input type="text" id="prezime" name="Презиме" placeholder="Иванов" autocomplete="additional-name" maxlength="80">
-        <div class="field-error">Моля, въведете презимеto си.</div>
-      </div>
-      <div class="form-field" id="field-familiya">
-        <label for="familiya">Фамилно име <span class="req">*</span></label>
-        <input type="text" id="familiya" name="Фамилно_име" placeholder="Иванов" autocomplete="family-name" maxlength="80">
-        <div class="field-error">Моля, въведете фамилното си име.</div>
-      </div>
-    </div>
-
-    <!-- CONTACT -->
-    <div class="form-row two">
-      <div class="form-field" id="field-email">
-        <label for="email">Електронна поща <span class="req">*</span></label>
-        <input type="email" id="email" name="email" placeholder="ivan@example.com" autocomplete="email" maxlength="120">
-        <div class="field-error">Моля, въведете валиден имейл адрес.</div>
-      </div>
-      <div class="form-field" id="field-telefon">
-        <label for="telefon">Телефон <span class="req">*</span></label>
-        <input type="tel" id="telefon" name="Телефон" placeholder="+359 88 888 8888" autocomplete="tel" maxlength="30">
-        <div class="field-error">Моля, въведете валиден телефонен номер.</div>
-      </div>
-    </div>
-
-    <!-- SUBJECT -->
-    <div class="form-row one">
-      <div class="form-field" id="field-tema">
-        <label for="tema">Тема <span class="req">*</span></label>
-        <select id="tema" name="Тема">
-          <option value="" disabled selected>— Изберете тема —</option>
-          <option value="Сигнал за престъпление">Сигнал за престъпление</option>
-          <option value="Жалба">Жалба</option>
-          <option value="Запитване">Запитване за обществена информация</option>
-          <option value="Медийно запитване">Медийно запитване</option>
-          <option value="Друго">Друго</option>
-        </select>
-        <div class="field-error">Моля, изберете тема.</div>
-      </div>
-    </div>
-
-    <!-- MESSAGE -->
-    <div class="form-row one">
-      <div class="form-field" id="field-saobshtenie">
-        <label for="saobshtenie">Съобщение <span class="req">*</span></label>
-        <textarea id="saobshtenie" name="Съобщение" placeholder="Опишете подробно вашия сигнал или запитване…" maxlength="5000"></textarea>
-        <div class="field-error">Моля, въведете съобщение (мин. 20 символа).</div>
-      </div>
-    </div>
-
-    <!-- FILE UPLOAD -->
-    <div class="form-row one">
-      <div class="form-field">
-        <label>Прикачи файлове <span style="font-weight:400;text-transform:none;font-size:.68rem;color:var(--text-dim)">(по избор — до 10 файла, макс. 5 МБ на файл, 15 МБ общо)</span></label>
-        <div class="file-drop" id="file-drop">
-          <input type="file" id="file-input" name="attachment[]" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip" aria-label="Прикачи файлове">
-          <span class="file-drop-icon">📎</span>
-          <div class="file-drop-label">Плъзнете файловете тук или кликнете, за да изберете</div>
-          <div class="file-drop-sub">JPG, PNG, PDF, DOC, DOCX, XLS, ZIP и др.</div>
-        </div>
-        <div class="file-list" id="file-list"></div>
-        <div class="file-counter" id="file-counter"></div>
-      </div>
-    </div>
-
-    <!-- GDPR CONSENT -->
-    <div class="gdpr-row">
-      <input type="checkbox" id="gdpr" name="gdpr_consent" value="да">
-      <label for="gdpr">
-        Съгласен/а съм личните ми данни (три имена, имейл, телефон) да бъдат обработвани от ГДБОП-МВР единствено за целите на разглеждане на подаденото от мен съобщение, в съответствие с <a href="https://www.mvr.bg" target="_blank" rel="noopener noreferrer">Политиката за поверителност на МВР</a> и Регламент (ЕС) 2016/679 (GDPR). <span class="req" style="color:var(--gold)">*</span>
-      </label>
-    </div>
-    <div class="form-field" id="field-gdpr" style="margin-top:.3rem">
-      <div class="field-error" style="display:none" id="gdpr-error">Трябва да дадете съгласие за обработка на личните данни.</div>
-    </div>
-
-    <!-- SUBMIT -->
-    <div class="form-submit-row">
-      <button type="submit" class="btn btn-submit" id="submit-btn">
-        <span class="spinner"></span>
-        <span class="btn-text">Изпрати съобщение →</span>
-      </button>
-      <div class="form-status" id="form-status"></div>
-    </div>
-  </form>
-</section>
 
   </div>
 </div>
@@ -267,256 +174,13 @@
       <h4>Контакти</h4>
       <p><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>гр. София, ПК 1784,<br>бул. „Цариградско шосе“ № 133А</p>
       <p><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>02/982 83 63</p>
-      <a class="btn" href="kontakti.html#signal">Изпрати съобщение</a>
+      <a class="btn" href="kontakti.html">Изпрати съобщение</a>
     </div>
   </div>
   <div class="footer-bottom">© 2026 ГДБОП — Министерство на вътрешните работи. Всички права запазени.</div>
 </footer>
 <button id="toTop" aria-label="Към началото">↑</button>
 <script src="js/sub.js"></script>
-<script>
-/* ─── SIGNAL FORM — with security hardening ───────────────────────────── */
-(function(){
-  const form        = document.getElementById('signal-form');
-  const fileInput   = document.getElementById('file-input');
-  const fileDrop    = document.getElementById('file-drop');
-  const fileList    = document.getElementById('file-list');
-  const fileCounter = document.getElementById('file-counter');
-  const submitBtn   = document.getElementById('submit-btn');
-  const formStatus  = document.getElementById('form-status');
 
-  const MAX_FILES    = 10;
-  const MAX_FILE_MB  = 5;
-  const MAX_TOTAL_MB = 15;
-  let selectedFiles  = [];
-
-  /* ── Rate limiting (max 3 submissions per 10 min via sessionStorage) ── */
-  const RATE_KEY    = 'gdbop_submit_times';
-  const RATE_MAX    = 3;
-  const RATE_WIN_MS = 10 * 60 * 1000;
-
-  function checkRateLimit() {
-    const now   = Date.now();
-    const times = JSON.parse(sessionStorage.getItem(RATE_KEY) || '[]')
-                    .filter(t => now - t < RATE_WIN_MS);
-    if (times.length >= RATE_MAX) {
-      const wait = Math.ceil((RATE_WIN_MS - (now - Math.min(...times))) / 60000);
-      return `Изпратили сте ${RATE_MAX} съобщения наскоро. Моля, опитайте след ${wait} мин.`;
-    }
-    times.push(now);
-    sessionStorage.setItem(RATE_KEY, JSON.stringify(times));
-    return null;
-  }
-
-  /* ── XSS / injection defence ── */
-  function stripTags(s) {
-    return s.replace(/<[^>]*>/g, '')
-            .replace(/&[a-z#0-9]+;/gi, ' ')
-            .trim();
-  }
-
-  const DANGEROUS = [
-    /<script|<\/script|javascript:/i,
-    /on\w+\s*=/i,
-    /<iframe|<object|<embed|<form/i,
-    /data:text\/html/i,
-    /vbscript:/i,
-    /\.\.[/\\]/,                                          // directory traversal
-    /union\s+select|drop\s+table|insert\s+into|exec\s*\(/i // SQL patterns
-  ];
-
-  function hasDangerousContent(s) {
-    return DANGEROUS.some(rx => rx.test(s));
-  }
-
-  /* ── Phone validation — digits, +, -, spaces, parens ── */
-  function validPhone(s) {
-    return /^[0-9+\-\s().]{7,20}$/.test(s.trim());
-  }
-
-  /* ── Filename sanitisation ── */
-  function sanitiseFilename(name) {
-    return name.replace(/[/\\:*?"<>|]/g, '_')
-               .replace(/\.\.\/?/g, '')
-               .replace(/\0/g, '')
-               .substring(0, 255);
-  }
-
-  /* ── MIME magic-bytes check ── */
-  const SIGS = {
-    jpg:  [[0xFF,0xD8,0xFF]],
-    jpeg: [[0xFF,0xD8,0xFF]],
-    png:  [[0x89,0x50,0x4E,0x47]],
-    gif:  [[0x47,0x49,0x46,0x38]],
-    bmp:  [[0x42,0x4D]],
-    webp: [[0x52,0x49,0x46,0x46]],
-    pdf:  [[0x25,0x50,0x44,0x46]],
-    zip:  [[0x50,0x4B,0x03,0x04],[0x50,0x4B,0x05,0x06]],
-    docx: [[0x50,0x4B,0x03,0x04]],
-    xlsx: [[0x50,0x4B,0x03,0x04]],
-    pptx: [[0x50,0x4B,0x03,0x04]],
-    doc:  [[0xD0,0xCF,0x11,0xE0]],
-    xls:  [[0xD0,0xCF,0x11,0xE0]],
-    ppt:  [[0xD0,0xCF,0x11,0xE0]],
-    txt:  null   // no reliable magic bytes
-  };
-
-  function verifyMime(file) {
-    const ext  = file.name.split('.').pop().toLowerCase();
-    const sigs = SIGS[ext];
-    if (sigs === null) return Promise.resolve(true);
-    if (!sigs)         return Promise.resolve(false);
-    return new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onloadend = function(ev) {
-        const bytes = new Uint8Array(ev.target.result);
-        resolve(sigs.some(sig => sig.every((b, i) => bytes[i] === b)));
-      };
-      reader.readAsArrayBuffer(file.slice(0, 8));
-    });
-  }
-
-  /* ── Drag-and-drop ── */
-  ['dragover','dragenter'].forEach(ev => fileDrop.addEventListener(ev, e => {
-    e.preventDefault(); fileDrop.classList.add('drag-over');
-  }));
-  ['dragleave','drop'].forEach(ev => fileDrop.addEventListener(ev, e => {
-    e.preventDefault(); fileDrop.classList.remove('drag-over');
-  }));
-  fileDrop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
-  fileInput.addEventListener('change', () => { addFiles(fileInput.files); fileInput.value = ''; });
-
-  async function addFiles(incoming) {
-    const EXT_OK = /\.(jpg|jpeg|png|gif|webp|bmp|pdf|doc|docx|xls|xlsx|ppt|pptx|txt|zip)$/i;
-    for (const f of Array.from(incoming)) {
-      if (selectedFiles.length >= MAX_FILES) break;
-      if (!EXT_OK.test(f.name))                       { alert(`Форматът "${f.name}" не се поддържа.`); continue; }
-      if (f.size > MAX_FILE_MB * 1024 * 1024)         { alert(`"${sanitiseFilename(f.name)}" надвишава ${MAX_FILE_MB} МБ.`); continue; }
-      const total = selectedFiles.reduce((s,x)=>s+x.size,0) + f.size;
-      if (total > MAX_TOTAL_MB * 1024 * 1024)         { alert(`Общият размер надвишава ${MAX_TOTAL_MB} МБ.`); continue; }
-      const mimeOk = await verifyMime(f);
-      if (!mimeOk)                                     { alert(`"${sanitiseFilename(f.name)}" — несъответствие на файловия формат.`); continue; }
-      if (!selectedFiles.find(x => x.name===f.name && x.size===f.size)) selectedFiles.push(f);
-    }
-    renderFileList();
-  }
-
-  function renderFileList() {
-    fileList.innerHTML = '';
-    selectedFiles.forEach((f, i) => {
-      const safe = sanitiseFilename(f.name);
-      const item = document.createElement('div');
-      item.className = 'file-item';
-      item.innerHTML = `<span class="file-item-name" title="${safe}">${safe}</span>
-        <span class="file-item-size">${(f.size/1024/1024).toFixed(2)} МБ</span>
-        <button type="button" class="file-item-del" aria-label="Премахни ${safe}" data-i="${i}">✕</button>`;
-      fileList.appendChild(item);
-    });
-    fileList.querySelectorAll('.file-item-del').forEach(btn =>
-      btn.addEventListener('click', () => { selectedFiles.splice(+btn.dataset.i, 1); renderFileList(); })
-    );
-    const total = selectedFiles.reduce((s,x)=>s+x.size,0) / 1024 / 1024;
-    const rem   = MAX_FILES - selectedFiles.length;
-    fileCounter.textContent = selectedFiles.length
-      ? `${selectedFiles.length} файл(а) | ${total.toFixed(2)} МБ | остават ${rem} слота`
-      : '';
-    fileCounter.className = 'file-counter' + (total > MAX_TOTAL_MB * .8 ? (total >= MAX_TOTAL_MB ? ' err' : ' warn') : '');
-  }
-
-  /* ── Field validation ── */
-  function validate() {
-    let ok = true;
-    const rules = [
-      { id: 'field-ime',         test: () => document.getElementById('ime').value.trim().length > 0 },
-      { id: 'field-prezime',     test: () => document.getElementById('prezime').value.trim().length > 0 },
-      { id: 'field-familiya',    test: () => document.getElementById('familiya').value.trim().length > 0 },
-      { id: 'field-email',       test: () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value.trim()) },
-      { id: 'field-telefon',     test: () => validPhone(document.getElementById('telefon').value) },
-      { id: 'field-tema',        test: () => document.getElementById('tema').value !== '' },
-      { id: 'field-saobshtenie', test: () => document.getElementById('saobshtenie').value.trim().length >= 20 },
-    ];
-    rules.forEach(r => {
-      const field = document.getElementById(r.id);
-      if (!field) return;
-      if (r.test()) field.classList.remove('error');
-      else          { field.classList.add('error'); ok = false; }
-    });
-    const gdprOk = document.getElementById('gdpr').checked;
-    document.getElementById('gdpr-error').style.display = gdprOk ? 'none' : 'block';
-    if (!gdprOk) ok = false;
-    if (form.querySelector('[name="website"]').value) ok = false;
-    return ok;
-  }
-
-  /* ── Submit ── */
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    if (!validate()) {
-      form.querySelector('.form-field.error input,.form-field.error select,.form-field.error textarea')
-          ?.scrollIntoView({behavior:'smooth', block:'center'});
-      return;
-    }
-
-    // Rate limit check
-    const ratErr = checkRateLimit();
-    if (ratErr) {
-      formStatus.className = 'form-status error';
-      formStatus.textContent = ratErr;
-      return;
-    }
-
-    // Sanitise and check all text fields for dangerous content
-    const textFields = ['ime','prezime','familiya','email','telefon','saobshtenie'];
-    for (const fid of textFields) {
-      const el  = document.getElementById(fid);
-      if (!el) continue;
-      const raw = el.value;
-      if (hasDangerousContent(raw)) {
-        formStatus.className = 'form-status error';
-        formStatus.textContent = '✗ Съобщението съдържа недопустимо съдържание. Моля, прегледайте въведения текст.';
-        return;
-      }
-      el.value = stripTags(raw);   // strip any stray HTML before submission
-    }
-
-    document.getElementById('email-subject').value =
-      `[ГДБОП] ${document.getElementById('tema').value} — от ${document.getElementById('ime').value.trim()} ${document.getElementById('familiya').value.trim()}`;
-
-    submitBtn.classList.add('loading');
-    formStatus.className = 'form-status';
-    formStatus.textContent = '';
-
-    const fd = new FormData(form);
-    fd.delete('attachment[]');
-    selectedFiles.forEach(f => fd.append('attachment[]', f, sanitiseFilename(f.name)));
-
-    try {
-      const res  = await fetch('https://api.web3forms.com/submit', { method:'POST', body: fd });
-      const data = await res.json();
-      if (data.success) {
-        formStatus.className = 'form-status success';
-        formStatus.textContent = '✓ Съобщението ви беше изпратено успешно. Ще се свържем с вас при необходимост.';
-        form.reset();
-        selectedFiles = [];
-        renderFileList();
-      } else {
-        throw new Error(data.message || 'Грешка при изпращане');
-      }
-    } catch(err) {
-      formStatus.className = 'form-status error';
-      formStatus.textContent = '✗ Неуспешно изпращане. Моля, опитайте отново или се свържете с нас на gdbop@mvr.bg';
-    } finally {
-      submitBtn.classList.remove('loading');
-    }
-  });
-
-  form.querySelectorAll('input,select,textarea').forEach(el =>
-    el.addEventListener('input', () => {
-      const field = el.closest('.form-field');
-      if (field) field.classList.remove('error');
-    })
-  );
-})();
-</script>
 </body>
 </html>

@@ -27,6 +27,8 @@
 .data-note li:first-child{border-top:0}
 .data-note li::before{content:'\2022';position:absolute;left:0;color:var(--gold)}
 .data-note li b{color:var(--text)}
+.data-note .opt{color:var(--gold);font-weight:700}
+.data-note .note-fine{font-size:.8rem;color:var(--text-dim);margin:.85rem 0 0;line-height:1.55}
 @media(max-width:860px){.contact-grid-inline{grid-template-columns:1fr !important}}
 </style>
 </head>
@@ -106,20 +108,21 @@
       <div class="contact-card">
         <div class="contact-row addr"><span><strong style="color:var(--text)">General Directorate Combating Organised Crime</strong><br>Ministry of the Interior · Republic of Bulgaria<br>133A Tsarigradsko Shose Blvd.<br>1784 Sofia</span></div>
         <div class="contact-row tel"><span>tel.: <a class="inline" href="tel:+35929828363">+359 2 98 28 363</a></span></div>
-        <div class="contact-row mail"><span>To report a <strong style="color:var(--text)">conventional crime</strong>, send all available information and data to <a class="inline" href="mailto:gdbop@mvr.bg">gdbop@mvr.bg</a>.</span></div>
-        <div class="contact-row cyber"><span>To report a <strong style="color:var(--text)">cybercrime</strong>, send all available information and data to <a class="inline" href="mailto:report@cybercrime.bg">report@cybercrime.bg</a>.</span></div>
+        <div class="contact-row mail"><span>To report a crime, send all available information and data to <a class="inline" href="mailto:gdbop@mvr.bg">gdbop@mvr.bg</a>.</span></div>
         <div class="contact-row info"><span>If you are not sure what type of crime you are reporting, see the <a class="inline" href="linii-na-rabota.html">Areas of Work</a> section in the top navigation.</span></div>
       </div>
       <div class="data-note">
-        <h4>Required personal data</h4>
-        <p>When submitting a report, the citizen should provide the following personal data:</p>
+        <h4>Required data</h4>
+        <p>When submitting a report, the sender should provide the following data:</p>
         <ul>
-          <li><b>Full name</b></li>
-          <li><b>Citizen number</b> (national ID)</li>
+          <li><b>Full name</b> (given, middle and family name)</li>
+          <li><b>Personal number</b> — ЕГН (national ID) or ЛНЧ (foreigner’s personal number)</li>
           <li><b>Telephone</b> — for fast and efficient communication</li>
           <li><b>Email</b> for contact</li>
           <li><b>Current address</b> of residence</li>
+          <li><b>Company name</b> and <b>ЕИК</b> (Unified Identification Code) <span class="opt">*</span></li>
         </ul>
+        <p class="note-fine"><span class="opt">*</span> Required only when the victim or sender is a legal entity (company or organisation).</p>
       </div>
       <h3>Office Hours of the Leadership</h3>
       <ul class="hours">

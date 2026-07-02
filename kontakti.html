@@ -27,6 +27,8 @@
 .data-note li:first-child{border-top:0}
 .data-note li::before{content:'\2022';position:absolute;left:0;color:var(--gold)}
 .data-note li b{color:var(--text)}
+.data-note .opt{color:var(--gold);font-weight:700}
+.data-note .note-fine{font-size:.8rem;color:var(--text-dim);margin:.85rem 0 0;line-height:1.55}
 @media(max-width:860px){.contact-grid-inline{grid-template-columns:1fr !important}}
 </style>
 </head>
@@ -105,20 +107,21 @@
       <div class="contact-card">
         <div class="contact-row addr"><span><strong style="color:var(--text)">Главна дирекция „Борба с организираната престъпност”</strong><br>Министерство на вътрешните работи · Република България<br>гр. София, пощенски код 1784<br>бул. „Цариградско шосе” № 133А</span></div>
         <div class="contact-row tel"><span>тел.: <a class="inline" href="tel:+35929828363">02/98 28 363</a></span></div>
-        <div class="contact-row mail"><span>За сигнал за <strong style="color:var(--text)">конвенционално престъпление</strong> изпратете цялата налична информация и данни на <a class="inline" href="mailto:gdbop@mvr.bg">gdbop@mvr.bg</a>.</span></div>
-        <div class="contact-row cyber"><span>За сигнал за <strong style="color:var(--text)">киберпрестъпление</strong> изпратете цялата налична информация и данни на <a class="inline" href="mailto:report@cybercrime.bg">report@cybercrime.bg</a>.</span></div>
+        <div class="contact-row mail"><span>За подаване на сигнал за престъпление изпратете цялата налична информация и данни на <a class="inline" href="mailto:gdbop@mvr.bg">gdbop@mvr.bg</a>.</span></div>
         <div class="contact-row info"><span>Ако не сте сигурни какъв вид престъпление подавате, вижте раздел <a class="inline" href="linii-na-rabota.html">„Линии на работа“</a> в горното меню.</span></div>
       </div>
       <div class="data-note">
-        <h4>Необходими лични данни</h4>
-        <p>При подаване на сигнал гражданинът следва да предостави следните лични данни:</p>
+        <h4>Необходими данни</h4>
+        <p>При подаване на сигнал подателят следва да предостави следните данни:</p>
         <ul>
-          <li><b>Трите имена</b></li>
-          <li><b>ЕГН</b> (единен граждански номер)</li>
+          <li><b>Пълно име</b> (собствено, бащино и фамилно)</li>
+          <li><b>ЕГН</b> (единен граждански номер) или <b>ЛНЧ</b> (личен номер на чужденец)</li>
           <li><b>Телефон</b> — за бърза и ефективна комуникация</li>
           <li><b>Имейл</b> за контакт</li>
           <li><b>Настоящ адрес</b> на пребиваване</li>
+          <li><b>Наименование на дружеството</b> и <b>ЕИК</b> (единен идентификационен код) <span class="opt">*</span></li>
         </ul>
+        <p class="note-fine"><span class="opt">*</span> Попълва се само когато пострадал или подател е юридическо лице (дружество или организация).</p>
       </div>
       <h3>Приемно време на ръководството</h3>
       <ul class="hours">

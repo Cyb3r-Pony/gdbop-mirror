@@ -379,3 +379,9 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
 
 /* Anchored sections: clear the sticky header + reserve image space so #links land correctly */
 .line-sec,.article section[id]{scroll-margin-top:100px}
+
+/* Mobile: left-align justified prose to avoid gappy lines on narrow screens */
+@media(max-width:600px){
+  .article p,.leader-hero p,.tl-item p,.callout,.acc-a-inner p,.feature-card .body p,.fb-info-card p{text-align:left}
+  .data-note{padding:1.2rem 1.2rem}
+}

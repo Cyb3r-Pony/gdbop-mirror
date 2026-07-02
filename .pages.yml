@@ -1,0 +1,83 @@
+# Pages CMS configuration — https://pagescms.org
+# Edit news at https://app.pagescms.org (log in with GitHub → 2FA).
+
+media:
+  - name: images
+    label: Images / Снимки
+    input: images
+    output: /images
+    extensions: [png, jpg, jpeg, webp, gif, svg]
+
+content:
+  - name: news
+    label: Новини (News)
+    type: collection
+    path: content/news
+    filename: '{fields.slug}.json'
+    format: json
+    view:
+      fields: [image, title_bg, date, category]
+      primary: title_bg
+      sort: [date, title_bg]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: date
+        label: Дата / Date
+        type: date
+        options: { format: yyyy-MM-dd }
+        required: true
+      - name: slug
+        label: URL идентификатор (само латиница, напр. akciya-varna)
+        type: string
+        required: true
+        pattern:
+          regex: '^[a-z0-9-]+$'
+          message: 'Само малки латински букви, цифри и тире.'
+      - name: category
+        label: Категория / Category
+        type: select
+        required: true
+        options:
+          values:
+            - { value: drugs,              label: 'Наркотици / Drugs' }
+            - { value: cyber,              label: 'Киберпрестъпност / Cybercrime' }
+            - { value: human-trafficking,  label: 'Трафик на хора / Human Trafficking' }
+            - { value: smuggling,          label: 'Контрабанда / Smuggling' }
+            - { value: counterfeiting,     label: 'Фалшификации / Counterfeiting' }
+            - { value: cultural-valuables, label: 'Културни ценности / Cultural Valuables' }
+            - { value: corruption,         label: 'Корупция и изпиране на пари / Corruption & Money Laundering' }
+            - { value: financial-fraud,    label: 'Финансови измами / Financial Fraud' }
+            - { value: organised-crime,    label: 'Организирана престъпност / Organised Crime' }
+            - { value: investigation,      label: 'Разследване / Investigation' }
+      - name: image
+        label: Снимка / Image
+        type: image
+        required: true
+      - name: title_bg
+        label: Заглавие (BG)
+        type: string
+        required: true
+      - name: title_en
+        label: Title (EN)
+        type: string
+      - name: subtitle_bg
+        label: Подзаглавие (BG) — по избор
+        type: string
+      - name: subtitle_en
+        label: Subtitle (EN) — optional
+        type: string
+      - name: body_bg
+        label: Текст на новината (BG)
+        type: rich-text
+        required: true
+      - name: body_en
+        label: News text (EN) — optional
+        type: rich-text
+      - name: source_url
+        label: Линк към източник (Facebook и др.) — по избор
+        type: string
+      - name: hashtags
+        label: Хаштагове през запетая (напр. ГДБОП, Наркотици) — по избор
+        type: string

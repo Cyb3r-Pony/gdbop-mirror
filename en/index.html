@@ -687,6 +687,11 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
 <button id="toTop" aria-label="Back to top">↑</button>
 
 <script>
+/* Always load at the top; stop the browser from restoring a mid-page scroll on mobile */
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+(function(){function top(){ if(!location.hash) window.scrollTo({top:0,left:0,behavior:'instant'}); }
+top(); addEventListener('DOMContentLoaded',top); addEventListener('load',top);
+addEventListener('pageshow',function(e){ if(e.persisted) top(); });})();
 // scroll progress + header state + back-to-top
 const header=document.getElementById('header'),progress=document.getElementById('progress'),toTop=document.getElementById('toTop');
 addEventListener('scroll',()=>{

@@ -1,3 +1,6 @@
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+(function(){function top(){ if(!location.hash) window.scrollTo({top:0,left:0,behavior:'instant'}); }
+addEventListener('load',top); addEventListener('pageshow',function(e){ if(e.persisted) top(); });})();
 // shared subpage behavior
 const header=document.getElementById('header'),progress=document.getElementById('progress'),toTop=document.getElementById('toTop');
 addEventListener('scroll',()=>{

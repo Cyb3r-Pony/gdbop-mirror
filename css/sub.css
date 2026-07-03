@@ -265,6 +265,7 @@ footer{background:var(--navy-950);border-top:1px solid rgba(255,255,255,.07)}
   .burger{display:block;position:relative;z-index:1002}
   .lang-btn{position:relative;z-index:1002}
   .brand{position:relative;z-index:1002}
+  .brand-text .sup{display:none}
   nav.primary>ul>li.open>a{color:var(--gold-light)}
   .dropdown a{padding:.7rem 0 .7rem 1.2rem;border-left:2px solid rgba(255,200,61,.3)}
 

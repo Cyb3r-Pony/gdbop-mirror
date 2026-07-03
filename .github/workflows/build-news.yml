@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
         continue-on-error: true
         with:
-          repository: ${{ github.repository_owner }}/gdbop-news
+          repository: ${{ vars.NEWS_REPO || format('{0}/gdbop-news', github.repository_owner) }}
           path: _newsrepo
 
       - name: Sync news content (json + images only)

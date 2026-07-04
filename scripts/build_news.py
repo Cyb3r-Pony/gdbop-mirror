@@ -98,6 +98,29 @@ def card(a,slug,en):
       f'          <a class="news-more" href="novini/{slug}.html">{more}</a>\n'
       '        </div>\n      </article>')
 
+def card_list(a,slug,en):
+    date=dispdate(a.get('date','')); tag=CAT.get(a.get('category'),('',''))[1 if en else 0]
+    title=(a.get('title_en' if en else 'title_bg') or a.get('title_bg',''))
+    imgp='../images/'+safe_img(a.get('image',''))
+    more='Read more' if en else 'Повече'
+    return ('      <article class="news-card reveal">\n'
+      f'        <div class="news-thumb"><img src="{esc(imgp)}" alt=""><span class="news-date">{esc(date)}</span></div>\n'
+      '        <div class="news-body">\n'
+      f'          <span class="news-tag">{esc(tag)}</span>\n'
+      f'          <h3>{esc(title)}</h3>\n'
+      f'          <a class="news-more" href="{esc(slug)}.html">{more}</a>\n'
+      '        </div>\n      </article>')
+
+def render_list(en):
+    tpl=TPL_EN if en else TPL_BG
+    title='News' if en else 'Новини'; home='Home' if en else 'Начало'
+    suffix=' | GDCOC — Ministry of the Interior' if en else ' | ГДБОП — МВР'
+    desc='Latest news and operations from GDCOC.' if en else 'Актуални новини и операции от ГДБОП — МВР.'
+    grid='<div class="news-grid">\n'+'\n'.join(card_list(a,a['_slug'],en) for a in items)+'\n    </div>'
+    h=tpl.replace('{{TITLE}}',esc(title)+suffix).replace('{{DESC}}',esc(desc)).replace('{{SLUG}}','index').replace('{{H1}}',title).replace('{{ARTICLE}}',grid)
+    h=re.sub(r'<div class="breadcrumb">.*?</div>', '<div class="breadcrumb"><a href="../index.html">'+home+'</a> → <span>'+title+'</span></div>', h, count=1)
+    return h if en else nbsp(h)
+
 items=[]
 for f in glob.glob('content/news/*.json'):
     try: a=json.load(open(f,encoding='utf-8'))
@@ -108,15 +131,13 @@ items.sort(key=lambda a:(a.get('date',''),a['_slug']), reverse=True)
 
 # regenerate article pages fresh (remove stale ones first)
 valid={a['_slug'] for a in items}
-for d,pre in [('novini','novina-'),('en/novini','novina-')]:
+for d in ['novini','en/novini']:
     for h in glob.glob(d+'/*.html'):
-        if os.path.basename(h)[:-5] not in valid: os.remove(h); print('removed stale',h)
+        b=os.path.basename(h)[:-5]
+        if b!='index' and b not in valid: os.remove(h); print('removed stale',h)
 for a in items:
     open('novini/'+a['_slug']+'.html','w',encoding='utf-8').write(render(a,a['_slug'],False))
     open('en/novini/'+a['_slug']+'.html','w',encoding='utf-8').write(render(a,a['_slug'],True))
-for f,en in [('index.html',False),('en/index.html',True)]:
-    s=open(f,encoding='utf-8').read()
-    cards='\n'+'\n'.join(card(a,a['_slug'],en) for a in items)+'\n      '
-    s=re.sub(r'(<!-- NEWS:START -->)[\s\S]*?(<!-- NEWS:END -->)', lambda m:m.group(1)+cards+m.group(2), s, count=1)
-    open(f,'w',encoding='utf-8').write(nbsp(s) if not en else s)
-print('built',len(items),'items')
+open('novini/index.html','w',encoding='utf-8').write(render_list(False))
+open('en/novini/index.html','w',encoding='utf-8').write(render_list(True))
+print('built',len(items),'items + 2 listing pages')

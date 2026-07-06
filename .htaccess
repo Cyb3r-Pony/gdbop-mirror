@@ -14,8 +14,8 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
   # Referrer policy
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
-  # XSS protection (legacy browsers)
-  Header always set X-XSS-Protection "1; mode=block"
+  # Explicitly disable the legacy XSS auditor (deprecated; could itself be abused)
+  Header always set X-XSS-Protection "0"
 
   # Permissions policy — disable unused browser APIs
   Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), accelerometer=(), gyroscope=()"
@@ -31,7 +31,7 @@ script-src 'self' 'unsafe-inline'; \
 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; \
 font-src 'self' https://fonts.gstatic.com; \
 img-src 'self' data: https:; \
-frame-src https://www.youtube-nocookie.com https://www.openstreetmap.org https://www.facebook.com; \
+frame-src https://www.youtube-nocookie.com https://maps.google.com https://www.facebook.com; \
 connect-src 'self'; \
 object-src 'none'; \
 base-uri 'self'; \
@@ -55,6 +55,5 @@ Options -Indexes
 
 # ── Prevent access to hidden files ────────────────────────────────────
 <FilesMatch "^\.">
-  Order allow,deny
-  Deny from all
+  Require all denied
 </FilesMatch>

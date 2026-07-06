@@ -85,30 +85,15 @@ def render(a,slug,en):
          .replace('{{BREADCRUMB}}',esc(crumb(title))).replace('{{H1}}',esc(title)).replace('{{ARTICLE}}',section(a,en))
     return h if en else nbsp(h)
 
-def card(a,slug,en):
-    date=dispdate(a.get('date','')); tag=CAT.get(a.get('category'),('',''))[1 if en else 0]
-    title=(a.get('title_en' if en else 'title_bg') or a.get('title_bg',''))
-    imgp=('../images/' if en else 'images/')+safe_img(a.get('image',''))
-    more='Read more' if en else 'Повече'
-    return ('      <article class="news-card reveal">\n'
-      f'        <div class="news-thumb"><img src="{esc(imgp)}" alt=""><span class="news-date">{esc(date)}</span></div>\n'
-      '        <div class="news-body">\n'
-      f'          <span class="news-tag">{esc(tag)}</span>\n'
-      f'          <h3>{esc(title)}</h3>\n'
-      f'          <a class="news-more" href="novini/{slug}.html">{more}</a>\n'
-      '        </div>\n      </article>')
-
 def card_list(a,slug,en):
     date=dispdate(a.get('date','')); tag=CAT.get(a.get('category'),('',''))[1 if en else 0]
     title=(a.get('title_en' if en else 'title_bg') or a.get('title_bg',''))
-    imgp='../images/'+safe_img(a.get('image',''))
-    more='Read more' if en else 'Повече'
+    imgp=('../../images/' if en else '../images/')+safe_img(a.get('image',''))
     return ('      <article class="news-card reveal">\n'
-      f'        <div class="news-thumb"><img src="{esc(imgp)}" alt=""><span class="news-date">{esc(date)}</span></div>\n'
+      f'        <div class="news-thumb"><img src="{esc(imgp)}" alt="" loading="lazy"><span class="news-date">{esc(date)}</span></div>\n'
       '        <div class="news-body">\n'
       f'          <span class="news-tag">{esc(tag)}</span>\n'
-      f'          <h3>{esc(title)}</h3>\n'
-      f'          <a class="news-more" href="{esc(slug)}.html">{more}</a>\n'
+      f'          <h3><a href="{esc(slug)}.html">{esc(title)}</a></h3>\n'
       '        </div>\n      </article>')
 
 def render_list(en):

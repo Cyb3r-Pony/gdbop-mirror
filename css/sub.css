@@ -226,6 +226,22 @@ body.menu-open{overflow:hidden}
 .hashtags{margin-top:2rem;display:flex;flex-wrap:wrap;gap:.5rem}
 .hashtags span{font-size:.72rem;color:var(--text-dim);border:1px solid rgba(255,255,255,.1);padding:.3rem .7rem;letter-spacing:.04em}
 
+/* news listing cards (novini/index.html) — 3 per row on desktop, title is the link */
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.news-card{background:var(--navy-800);border:1px solid rgba(255,255,255,.07);overflow:hidden;display:flex;flex-direction:column;transition:transform .35s var(--ease),box-shadow .35s,border-color .35s}
+.news-card:hover{transform:translateY(-6px);box-shadow:0 22px 44px rgba(0,0,0,.5);border-color:var(--line)}
+.news-thumb{position:relative;overflow:hidden;aspect-ratio:2/1}
+.news-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.news-card:hover .news-thumb img{transform:scale(1.08)}
+.news-date{position:absolute;top:.9rem;left:.9rem;background:var(--navy-950);border-left:3px solid var(--gold);padding:.35rem .7rem;font-size:.66rem;font-weight:700;letter-spacing:.1em}
+.news-body{padding:1.2rem 1.3rem 1.4rem;display:flex;flex-direction:column;gap:.7rem;flex:1}
+.news-tag{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.article .news-body h3{font-size:.92rem;font-weight:700;line-height:1.45;margin:0;color:var(--text)}
+.news-body h3 a{display:block;transition:color .25s}
+.news-body h3 a:hover,.news-body h3 a:focus-visible{color:var(--gold-light)}
+@media(max-width:1060px){.news-grid{grid-template-columns:repeat(2,1fr)}.news-thumb{aspect-ratio:16/9}}
+@media(max-width:640px){.news-grid{grid-template-columns:1fr}}
+
 /* reveal */
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
 .reveal.revealed{opacity:1;transform:none}

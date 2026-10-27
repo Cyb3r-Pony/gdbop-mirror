@@ -1,12 +1,12 @@
 name: Build news
 
-# Pulls news content from the separate, editor-writable repo (OWNER/gdbop-news),
-# regenerates the article pages + homepage cards, and commits them here.
-# The editor never has access to this repo — only to gdbop-news.
+# Regenerates the news article pages + listing from the content repo (OWNER/ct-al2mru).
+# Runs ONLY when the content repo signals a change (the CMS saved a news item),
+# when run manually, or when the templates/build script change here.
 on:
-  schedule:
-    - cron: '*/5 * * * *'      # check the content repo every ~5 min
-  workflow_dispatch:            # ...or run manually for an instant rebuild
+  repository_dispatch:
+    types: [news-updated]     # fired by the content repo after a CMS save
+  workflow_dispatch:          # manual "Run workflow" for an instant rebuild
   push:
     paths:
       - 'templates/news-article.*.html'
@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
         continue-on-error: true
         with:
-          repository: ${{ vars.NEWS_REPO || format('{0}/gdbop-news', github.repository_owner) }}
+          repository: ${{ vars.NEWS_REPO || format('{0}/ct-al2mru', github.repository_owner) }}
           path: _newsrepo
 
       - name: Sync news content (json + images only)
@@ -46,7 +46,7 @@ jobs:
             fi
             echo "Synced $(ls content/news/*.json 2>/dev/null | wc -l) news items."
           else
-            echo "gdbop-news not found yet; building from local content/news."
+            echo "content repo not found yet; building from local content/news."
           fi
 
       - uses: actions/setup-python@v5
@@ -58,9 +58,9 @@ jobs:
       - name: Commit regenerated pages
         run: |
           rm -rf _newsrepo
-          git config user.name "gdbop-news-bot"
+          git config user.name "content-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add content/news images novini en/novini index.html en/index.html
+          git add content/news images news en/news index.html en/index.html sitemap.xml
           if git diff --cached --quiet; then
             echo "No changes."
           else

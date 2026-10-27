@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-53RLJDXM');</script>
+<!-- End Google Tag Manager -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Страницата е преместена — ГДБОП</title>
+<script>
+(function(){
+  // The site structure changed: the old Bulgarian pages lived under /bg/ ; BG now lives at the root.
+  var p = location.pathname;
+  var map = { '/bg':'/', '/bg/':'/' };   // add specific old→new mappings here if ever needed
+  var dest = map[p] || '/';              // default: send anything unknown to the homepage
+  if (location.pathname !== dest) {
+    setTimeout(function(){ location.replace(dest + location.search + location.hash); }, 1400);
+  }
+})();
+</script>
+<style>
+  html,body{margin:0;height:100%}
+  body{background:#103166;color:#eaf0ff;font-family:system-ui,'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}
+  h1{font-size:2.6rem;margin:0 0 .5rem;color:#ffc83d}
+  p{font-size:1.05rem;line-height:1.6;color:#c7d3ee;max-width:560px}
+  .links{margin-top:1.6rem;display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center}
+  .links a{color:#0b1220;background:#ffc83d;text-decoration:none;padding:.6rem 1.1rem;font-weight:700;font-size:.85rem}
+  .links a.ghost{background:transparent;color:#ffc83d;border:1px solid #ffc83d}
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-53RLJDXM" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <div>
+    <h1>Страницата е преместена</h1>
+    <p>Този адрес вече не съществува на обновения сайт. Пренасочваме ви автоматично — ако това не стане, използвайте връзките по-долу.</p>
+    <div class="links">
+      <a href="/">Начало</a>
+      <a class="ghost" href="/news/index.html">Новини</a>
+      <a class="ghost" href="/contacts.html">Контакти</a>
+      <a class="ghost" href="/en/">English</a>
+    </div>
+  </div>
+</body>
+</html>

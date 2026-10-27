@@ -40,6 +40,12 @@ document.querySelectorAll('.acc-item').forEach(item=>{
   });
 });
 
+// open an accordion item linked directly via URL hash (e.g. #faq-victim)
+(function(){try{var h=location.hash&&document.querySelector(location.hash);
+  if(h&&h.classList&&h.classList.contains('acc-item')){var q=h.querySelector('.acc-q'),a=h.querySelector('.acc-a');
+    h.classList.add('open');if(q)q.setAttribute('aria-expanded','true');if(a)a.style.maxHeight=a.scrollHeight+'px';
+    setTimeout(function(){h.scrollIntoView({behavior:'smooth',block:'center'});},120);}}catch(e){}})();
+
 // keep open accordion panels sized correctly on resize/rotation
 let rT;addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(()=>{
   document.querySelectorAll('.acc-item.open .acc-a').forEach(a=>a.style.maxHeight=a.scrollHeight+'px');
@@ -64,3 +70,36 @@ if(burger&&nav){
   }));
   addEventListener('resize',()=>{if(innerWidth>1060)closeMenu()});
 }
+
+// Responsive Facebook page embed (Media page): render the plugin at its container width — no FB SDK.
+(function(){
+  var f=document.getElementById('fbpage'); if(!f) return;
+  function build(){
+    var cw=(f.parentElement&&f.parentElement.clientWidth)||340;
+    var w=Math.max(180,Math.min(500,Math.floor(cw)));
+    if(f._w===w) return; f._w=w;
+    f.setAttribute('width',w); f.style.width=w+'px';
+    f.src='https://www.facebook.com/plugins/page.php?href='+encodeURIComponent(f.getAttribute('data-href'))+'&tabs=timeline&width='+w+'&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true';
+  }
+  build();
+  var t; addEventListener('resize',function(){clearTimeout(t);t=setTimeout(build,300);});
+})();
+
+// news listing pagination (5 rows x 4 = 20 per page)
+(function(){var grid=document.querySelector('.news-grid');if(!grid)return;
+  var cards=[].slice.call(grid.querySelectorAll('.news-card')),per=20;
+  if(cards.length<=per)return;
+  var pages=Math.ceil(cards.length/per),cur=1,pager=document.createElement('div');
+  pager.className='pager';grid.parentNode.insertBefore(pager,grid.nextSibling);
+  function render(){
+    cards.forEach(function(c,i){c.style.display=(i>=(cur-1)*per&&i<cur*per)?'':'none';});
+    pager.innerHTML='';
+    function mk(txt,pg,dis,act){var b=document.createElement('button');b.className='pager-btn'+(act?' active':'');b.textContent=txt;
+      if(dis)b.disabled=true;else b.onclick=function(){cur=pg;render();window.scrollTo({top:(grid.getBoundingClientRect().top+window.scrollY-120),behavior:'smooth'});};
+      pager.appendChild(b);}
+    mk('‹',cur-1,cur===1,false);
+    for(var p=1;p<=pages;p++)mk(String(p),p,false,p===cur);
+    mk('›',cur+1,cur===pages,false);
+  }
+  render();
+})();

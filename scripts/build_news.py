@@ -30,7 +30,7 @@ CAT={'drugs':('Наркотици','Drugs'),'cyber':('Киберпрестъпн
  'counterfeiting':('Фалшификации','Counterfeiting'),'cultural-valuables':('Културни ценности','Cultural Valuables'),
  'financial-fraud':('Финансови измами','Financial Fraud'),'investigation':('Разследване','Investigation'),
  'smuggling':('Контрабанда','Smuggling'),'corruption':('Корупция и изпиране на пари','Corruption and Money Laundering')}
-NB=' '
+NB='\u00a0'
 def nbsp(html):
     blocks=[]
     def stash(m): blocks.append(m.group(0)); return '\x00'+str(len(blocks)-1)+'\x00'
@@ -85,16 +85,29 @@ def render(a,slug,en):
          .replace('{{BREADCRUMB}}',esc(crumb(title))).replace('{{H1}}',esc(title)).replace('{{ARTICLE}}',section(a,en))
     return h if en else nbsp(h)
 
+def card(a,slug,en):
+    date=dispdate(a.get('date','')); tag=CAT.get(a.get('category'),('',''))[1 if en else 0]
+    title=(a.get('title_en' if en else 'title_bg') or a.get('title_bg',''))
+    imgp=('../images/' if en else 'images/')+safe_img(a.get('image',''))
+    more='Read more' if en else 'Повече'
+    return ('      <article class="news-card reveal">\n'
+      f'        <div class="news-thumb"><img src="{esc(imgp)}" alt=""><span class="news-date">{esc(date)}</span></div>\n'
+      '        <div class="news-body">\n'
+      f'          <span class="news-tag">{esc(tag)}</span>\n'
+      f'          <h3>{esc(title)}</h3>\n'
+      f'          <a class="news-more" href="news/{slug}.html">{more}</a>\n'
+      '        </div>\n      </article>')
+
 def card_list(a,slug,en):
     date=dispdate(a.get('date','')); tag=CAT.get(a.get('category'),('',''))[1 if en else 0]
     title=(a.get('title_en' if en else 'title_bg') or a.get('title_bg',''))
     imgp=('../../images/' if en else '../images/')+safe_img(a.get('image',''))
-    return ('      <article class="news-card reveal">\n'
-      f'        <div class="news-thumb"><img src="{esc(imgp)}" alt="" loading="lazy"><span class="news-date">{esc(date)}</span></div>\n'
+    return ('      <a class="news-card reveal" href="'+esc(slug)+'.html">\n'
+      f'        <div class="news-thumb"><img src="{esc(imgp)}" alt=""><span class="news-date">{esc(date)}</span></div>\n'
       '        <div class="news-body">\n'
       f'          <span class="news-tag">{esc(tag)}</span>\n'
-      f'          <h3><a href="{esc(slug)}.html">{esc(title)}</a></h3>\n'
-      '        </div>\n      </article>')
+      f'          <h3>{esc(title)}</h3>\n'
+      '        </div>\n      </a>')
 
 def render_list(en):
     tpl=TPL_EN if en else TPL_BG
@@ -116,13 +129,23 @@ items.sort(key=lambda a:(a.get('date',''),a['_slug']), reverse=True)
 
 # regenerate article pages fresh (remove stale ones first)
 valid={a['_slug'] for a in items}
-for d in ['novini','en/novini']:
+for d in ['news','en/news']:
     for h in glob.glob(d+'/*.html'):
         b=os.path.basename(h)[:-5]
         if b!='index' and b not in valid: os.remove(h); print('removed stale',h)
 for a in items:
-    open('novini/'+a['_slug']+'.html','w',encoding='utf-8').write(render(a,a['_slug'],False))
-    open('en/novini/'+a['_slug']+'.html','w',encoding='utf-8').write(render(a,a['_slug'],True))
-open('novini/index.html','w',encoding='utf-8').write(render_list(False))
-open('en/novini/index.html','w',encoding='utf-8').write(render_list(True))
+    open('news/'+a['_slug']+'.html','w',encoding='utf-8').write(render(a,a['_slug'],False))
+    open('en/news/'+a['_slug']+'.html','w',encoding='utf-8').write(render(a,a['_slug'],True))
+open('news/index.html','w',encoding='utf-8').write(render_list(False))
+open('en/news/index.html','w',encoding='utf-8').write(render_list(True))
 print('built',len(items),'items + 2 listing pages')
+
+# regenerate sitemap.xml so newly added news articles are always included
+sm=['<?xml version="1.0" encoding="UTF-8"?>','<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+for hf in sorted(glob.glob('**/*.html',recursive=True)):
+    if hf.startswith('templates/') or hf=='404.html': continue
+    path=hf[:-10] if hf.endswith('index.html') else hf
+    sm.append('  <url><loc>https://gdbop.bg/'+path+'</loc></url>')
+sm.append('</urlset>')
+open('sitemap.xml','w',encoding='utf-8').write('\n'.join(sm)+'\n')
+print('sitemap.xml:',len(sm)-3,'urls')

@@ -1,0 +1,16 @@
+# Copy to worker/.dev.vars (gitignored) for `npm run dev`. Placeholders only:
+# never put real secrets in this example file.
+ALLOWED_ORIGINS=http://localhost:8787
+PUBLIC_BASE_URL=http://localhost:8787
+REPORT_FROM=reports@example.bg
+REPORT_TO=inbox@example.org
+# Turnstile's published always-pass test secret (pairs with site key 1x00000000000000000000AA)
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+# the test keys report this hostname; production checks the hosts of ALLOWED_ORIGINS
+TURNSTILE_HOSTNAMES=example.com
+FILE_LINK_SECRET=any-long-random-string-for-local-use
+# Optional locally; without it uploads still work, the scan is just not triggered
+# GITHUB_DISPATCH_TOKEN=
+# Links between reports (also needs INTEL_ENABLED=true and a local D1 binding)
+# INTEL_HMAC_KEY=any-string-of-at-least-32-characters-for-local-use
+# INTEL_ENC_KEY=<openssl rand -base64 32>

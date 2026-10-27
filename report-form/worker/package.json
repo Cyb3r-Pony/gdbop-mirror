@@ -1,0 +1,17 @@
+{
+  "name": "report-form-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "example.bg: the report form (static assets) plus the Worker behind it that validates the report, checks Turnstile and emails it.",
+  "scripts": {
+    "test": "node --test 'test/*.test.mjs'",
+    "assets": "node ../build.mjs && node build-assets.mjs",
+    "dev": "npm run assets && wrangler dev --local-upstream localhost:8787",
+    "deploy": "npm run assets && wrangler deploy",
+    "intel": "node scripts/intel.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

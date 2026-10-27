@@ -1,0 +1,96 @@
+name = "gdbop-report-demo"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+# report.stop-the-scam.xyz (demo host) is served by this Worker (the zone is in the same Cloudflare
+# account; deploying creates the DNS record and certificate). Must stay above the
+# first [table], otherwise TOML would read it as part of that table.
+routes = [{ pattern = "report.stop-the-scam.xyz", custom_domain = true }]
+
+# Reachable ONLY at report.stop-the-scam.xyz. A workers.dev or preview address would
+# bypass anything configured for that hostname (Cloudflare Access, WAF rules).
+workers_dev = false
+preview_urls = false
+
+# Not secret (the repo is public). Secrets are set with `wrangler secret put`:
+# REPORT_TO, TURNSTILE_SECRET, FILE_LINK_SECRET, GITHUB_DISPATCH_TOKEN,
+# SCAN_CALLBACK_SECRET (shared with the scan workflow), and for
+# the links between reports INTEL_HMAC_KEY and INTEL_ENC_KEY (see below).
+[vars]
+# "true" hides the whole site behind a 503 while it is being built (signed file
+# links keep working). Set to "false" and redeploy to open it to visitors.
+MAINTENANCE = "true"
+# The form is served from this same origin, so only it may call the API.
+ALLOWED_ORIGINS = "https://report.stop-the-scam.xyz"
+PUBLIC_BASE_URL = "https://report.stop-the-scam.xyz"
+# Sender on a subdomain with Email Routing: an apex SPF that ends in -all would reject Cloudflare mail.
+REPORT_FROM = "reports@mail.stop-the-scam.xyz"
+# Tag in the email subjects/footers ("[gdbop-demo] New report ...").
+BRAND = "gdbop-demo"
+# Shown in the scan email next to rejected files (where the evidence copy is).
+BUCKET_NAME = "gdbop-report-uploads"
+# Repository whose scan-uploads workflow the Worker starts after an upload.
+GITHUB_REPO = "Cyb3r-Pony/gdbop-mirror"
+GITHUB_REF = "main"
+
+# Links between reports (src/intel.js). OFF until the legal basis is approved.
+# Nothing about it is reachable from the internet: the data is read only with
+# `node scripts/intel.mjs` on an authorised machine. To turn on:
+#   1. npx wrangler d1 create report-intel --jurisdiction eu (data stays in the EU;
+#      it can only be set at creation), put its id in the
+#      [[d1_databases]] block below and uncomment it;
+#      npx wrangler d1 migrations apply report-intel --remote
+#   2. openssl rand -base64 48 | tee /dev/tty | npx wrangler secret put INTEL_HMAC_KEY
+#      openssl rand -base64 32 | tee /dev/tty | npx wrangler secret put INTEL_ENC_KEY
+#      Save both printed keys in a password manager: Cloudflare never shows them
+#      again, the script needs them, a new HMAC key stops matching older reports
+#      and a lost encryption key makes the stored reporter data unreadable.
+#   3. INTEL_ENABLED = "true", npm run deploy.
+INTEL_ENABLED = "false"
+# Days the reporter's name, phone and email are kept (0 = no limit). Identifiers
+# and report numbers are kept with no limit. Shortening it applies to old reports too.
+REPORTER_RETENTION_DAYS = "1825"
+
+# Private bucket (EU jurisdiction) for attachments and the short-lived report
+# state. Prefixes: pending/ (report waiting for its files), meta/ (file list, no
+# personal data), quarantine/ (just uploaded), clean/ (scanned), rejected/
+# (refused originals, evidence), results/ (scanner output). No public access, no
+# r2.dev URL, no custom domain. Lifecycle rules delete everything (see SETUP.md).
+[[r2_buckets]]
+binding = "UPLOADS"
+bucket_name = "gdbop-report-uploads"
+jurisdiction = "eu"
+
+# Static site (built by build-assets.mjs into ./public). Every request goes through
+# the Worker first (src/router.js) so MAINTENANCE can cover the page too; it hands
+# non-API paths to ASSETS.
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true
+
+# Cloudflare Email Routing: the Worker can only deliver to destination
+# addresses verified in the account, so a compromised Worker cannot mail
+# arbitrary third parties.
+[[send_email]]
+name = "SEND_EMAIL"
+
+# The database for the links between reports (see INTEL_ENABLED above).
+# [[d1_databases]]
+# binding = "INTEL_DB"
+# database_name = "report-intel"
+# database_id = "<id from: npx wrangler d1 create report-intel --jurisdiction eu>"
+# migrations_dir = "migrations"
+
+# Every 10 minutes: send reports whose upload was abandoned (tab closed) and
+# delete reporter data past REPORTER_RETENTION_DAYS (does nothing without INTEL_DB).
+[triggers]
+crons = ["*/10 * * * *"]
+
+# Per-IP throttle (limit requests per `period` seconds, 10 or 60).
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+  [ratelimits.simple]
+  limit = 2
+  period = 60

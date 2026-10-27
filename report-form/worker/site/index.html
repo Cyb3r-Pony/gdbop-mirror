@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="bg">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Подай сигнал – ГДБОП (демо)</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Подайте сигнал до ГДБОП – МВР за организирана престъпност и киберпрестъпления (демонстрационна версия).">
+    <!-- CSP and the other security headers are real HTTP headers, see _headers.
+         No analytics on this page on purpose: it collects personal data. -->
+    <meta name="referrer" content="no-referrer">
+
+    <link rel="icon" href="images/favicon.png" />
+
+    <!-- Tailwind CSS (precompiled at build time, see build.mjs) -->
+    <link href="assets/css/tailwind.min.css" rel="stylesheet">
+
+    <!-- Fonts (self-hosted) -->
+    <link href="assets/css/montserrat.css" rel="stylesheet">
+</head>
+
+<body
+    class="bg-gdbop-dark text-slate-100 font-sans antialiased overflow-x-hidden selection:bg-gdbop-blue selection:text-white flex flex-col min-h-screen">
+    <div id="root" class="flex flex-col flex-grow"></div>
+
+    <script src="assets/js/dist/report.bundle.js" defer></script>
+</body>
+
+</html>

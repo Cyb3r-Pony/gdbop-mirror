@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" width="1200" height="860" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="x" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="860" fill="#ffffff"/>
+
+  <text x="30" y="40" font-size="22" font-weight="700" fill="#0f172a">База „Връзки между сигналите“ (Cloudflare D1)</text>
+  <text x="30" y="64" font-size="13" fill="#64748b">Какво пази, как се достъпва и с какво е защитена · база report-intel · създава се с --jurisdiction eu</text>
+
+  <!-- ===== left: access paths ===== -->
+  <text x="30" y="104" font-size="12" font-weight="700" fill="#475569" letter-spacing="1">ДОСТЪП</text>
+
+  <rect x="30" y="116" width="300" height="96" rx="10" fill="#eff6ff" stroke="#2563eb"/>
+  <text x="46" y="140" font-size="14" font-weight="700" fill="#1e3a8a">1. Подател → формата</text>
+  <text x="46" y="160" font-size="11.5" fill="#1e293b">report.&lt;домейн&gt;/api/report (Worker)</text>
+  <text x="46" y="178" font-size="11.5" fill="#1e293b">само ЗАПИС + проверка за връзки;</text>
+  <text x="46" y="196" font-size="11.5" fill="#1e293b">към подателя се връща само {ok, номер}</text>
+
+  <rect x="30" y="226" width="300" height="78" rx="10" fill="#eff6ff" stroke="#2563eb"/>
+  <text x="46" y="250" font-size="14" font-weight="700" fill="#1e3a8a">2. Писмото до получателя</text>
+  <text x="46" y="270" font-size="11.5" fill="#1e293b">„Връзки с други сигнали“: номера и</text>
+  <text x="46" y="288" font-size="11.5" fill="#1e293b">идентификатори, без чужди лични данни</text>
+
+  <rect x="30" y="318" width="300" height="114" rx="10" fill="#ecfdf5" stroke="#16a34a"/>
+  <text x="46" y="342" font-size="14" font-weight="700" fill="#14532d">3. Оператор, локално: npm run intel</text>
+  <text x="46" y="362" font-size="11.5" fill="#1e293b">wrangler с вход в Cloudflare → D1 API</text>
+  <text x="46" y="380" font-size="11.5" fill="#1e293b">разчитане на компютъра с INTEL_ENC_KEY</text>
+  <text x="46" y="398" font-size="11.5" fill="#1e293b">таблици · CSV · офлайн HTML графика</text>
+  <text x="46" y="416" font-size="11.5" fill="#1e293b">всяко търсене → audit_log</text>
+
+  <rect x="30" y="446" width="300" height="60" rx="10" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="46" y="470" font-size="14" font-weight="700" fill="#334155">4. Cron, всеки ден 02:17 UTC</text>
+  <text x="46" y="490" font-size="11.5" fill="#1e293b">трие данните на подателите след срока</text>
+
+  <rect x="30" y="520" width="300" height="96" rx="10" fill="#fef2f2" stroke="#dc2626"/>
+  <text x="46" y="544" font-size="14" font-weight="700" fill="#991b1b">Отвън (интернет)</text>
+  <text x="46" y="564" font-size="11.5" fill="#1e293b">НЯМА адрес (URL) към базата, нито</text>
+  <text x="46" y="582" font-size="11.5" fill="#1e293b">страница за търсене. D1 API (cloudflare)</text>
+  <text x="46" y="600" font-size="11.5" fill="#1e293b">само с акаунт / API токен на Cloudflare</text>
+
+  <!-- arrows to DB -->
+  <g fill="none" stroke="#475569" stroke-width="1.6">
+    <path d="M330,164 L388,164" marker-end="url(#a)"/>
+    <path d="M388,262 L330,262" marker-end="url(#a)"/>
+    <path d="M330,375 L388,375" marker-end="url(#a)"/>
+    <path d="M330,476 L388,476" marker-end="url(#a)"/>
+  </g>
+  <path d="M330,568 L388,568" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#x)"/>
+  <text x="340" y="560" font-size="16" font-weight="700" fill="#dc2626">✕</text>
+
+  <!-- ===== centre: database ===== -->
+  <rect x="390" y="96" width="470" height="590" rx="14" fill="#fff7ed" stroke="#f48120" stroke-width="1.5"/>
+  <text x="408" y="122" font-size="14" font-weight="700" fill="#9a3f00">D1 · report-intel</text>
+  <text x="408" y="140" font-size="11" fill="#9a3f00">Cloudflare: AES-256 при съхранение, TLS при пренос</text>
+
+  <!-- tables -->
+  <g font-size="11.5">
+    <rect x="406" y="154" width="438" height="70" rx="8" fill="#ffffff" stroke="#fdba74"/>
+    <text x="420" y="174" font-weight="700" fill="#0f172a">reports</text>
+    <text x="830" y="174" text-anchor="end" fill="#b45309">без срок · открит текст</text>
+    <text x="420" y="194" fill="#334155">номер на сигнала, дата, вид престъпление,</text>
+    <text x="420" y="212" fill="#334155">дата на изтриване на данните на подателя</text>
+
+    <rect x="406" y="234" width="438" height="70" rx="8" fill="#ffffff" stroke="#fdba74"/>
+    <text x="420" y="254" font-weight="700" fill="#0f172a">indicators + report_indicators</text>
+    <text x="830" y="254" text-anchor="end" fill="#b45309">без срок · открит текст</text>
+    <text x="420" y="274" fill="#334155">сайт, профил, имейл, телефон, IBAN, крипто адрес,</text>
+    <text x="420" y="292" fill="#334155">@име на извършителя ↔ номерата на сигналите</text>
+
+    <rect x="406" y="314" width="438" height="70" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="420" y="334" font-weight="700" fill="#0f172a">reporter_keys</text>
+    <text x="830" y="334" text-anchor="end" fill="#15803d">срок · HMAC-SHA256</text>
+    <text x="420" y="354" fill="#334155">отпечатък на имената, телефона и имейла на</text>
+    <text x="420" y="372" fill="#334155">подателя (за търсене); стойностите не се пазят</text>
+
+    <rect x="406" y="394" width="438" height="70" rx="8" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="420" y="414" font-weight="700" fill="#0f172a">reporter_data</text>
+    <text x="830" y="414" text-anchor="end" fill="#15803d">срок · AES-256-GCM</text>
+    <text x="420" y="434" fill="#334155">имена, телефон, имейл на подателя, криптирани</text>
+    <text x="420" y="452" fill="#334155">и обвързани с номера на сигнала</text>
+
+    <rect x="406" y="474" width="438" height="70" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="420" y="494" font-weight="700" fill="#0f172a">audit_log</text>
+    <text x="830" y="494" text-anchor="end" fill="#475569">срок · кой, кога, какво</text>
+    <text x="420" y="514" fill="#334155">потребител@компютър, вид търсене, стойност</text>
+    <text x="420" y="532" fill="#334155">(при търсене по подател: само отпечатък)</text>
+
+    <rect x="406" y="554" width="438" height="116" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-dasharray="4 3"/>
+    <text x="420" y="574" font-weight="700" fill="#0f172a">НЕ се пазят в базата</text>
+    <text x="420" y="594" fill="#334155">• текстът на сигнала (само в писмото)</text>
+    <text x="420" y="612" fill="#334155">• ЕГН / дата на раждане</text>
+    <text x="420" y="630" fill="#334155">• снимките (частен R2, проверени, 30 дни)</text>
+    <text x="420" y="648" fill="#334155">• IP адресът на подателя</text>
+  </g>
+
+  <!-- ===== right: keys ===== -->
+  <text x="890" y="104" font-size="12" font-weight="700" fill="#475569" letter-spacing="1">КЛЮЧОВЕ</text>
+  <rect x="890" y="116" width="280" height="150" rx="10" fill="#f5f3ff" stroke="#7c3aed"/>
+  <text x="906" y="140" font-size="14" font-weight="700" fill="#4c1d95">INTEL_HMAC_KEY</text>
+  <text x="906" y="158" font-size="14" font-weight="700" fill="#4c1d95">INTEL_ENC_KEY</text>
+  <text x="906" y="182" font-size="11.5" fill="#1e293b">тайни на Worker-а: не се четат</text>
+  <text x="906" y="200" font-size="11.5" fill="#1e293b">обратно, дори от панела</text>
+  <text x="906" y="222" font-size="11.5" fill="#1e293b">+ копие в мениджъра на пароли</text>
+  <text x="906" y="244" font-size="11.5" fill="#1e293b">никога в кода, в git или в архивите</text>
+  <path d="M888,190 L862,410" fill="none" stroke="#7c3aed" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#a)"/>
+
+  <rect x="890" y="284" width="280" height="168" rx="10" fill="#f8fafc" stroke="#94a3b8"/>
+  <text x="906" y="308" font-size="14" font-weight="700" fill="#0f172a">Ако базата изтече</text>
+  <text x="906" y="330" font-size="11.5" fill="#1e293b">без ключовете се виждат само:</text>
+  <text x="906" y="348" font-size="11.5" fill="#1e293b">• номера и дати на сигнали</text>
+  <text x="906" y="366" font-size="11.5" fill="#1e293b">• идентификатори на извършители</text>
+  <text x="906" y="390" font-size="11.5" fill="#1e293b">имената и телефоните на</text>
+  <text x="906" y="408" font-size="11.5" fill="#1e293b">подателите остават нечетими</text>
+  <text x="906" y="432" font-size="11" fill="#64748b">(при изтекъл и HMAC ключ: телефоните</text>
+  <text x="906" y="446" font-size="11" fill="#64748b">могат да се налучкат → пазете и двата)</text>
+
+  <rect x="890" y="470" width="280" height="216" rx="10" fill="#fef2f2" stroke="#dc2626"/>
+  <text x="906" y="494" font-size="14" font-weight="700" fill="#991b1b">Пълен достъп до базата</text>
+  <text x="906" y="516" font-size="11.5" fill="#1e293b">• акаунтът в Cloudflare (2FA)</text>
+  <text x="906" y="536" font-size="11.5" fill="#1e293b">• API токени с права за D1</text>
+  <text x="906" y="556" font-size="11.5" fill="#1e293b">• компютърът с wrangler login</text>
+  <text x="906" y="574" font-size="11" fill="#64748b">  (токенът е в ~/.wrangler/config)</text>
+  <text x="906" y="594" font-size="11.5" fill="#1e293b">• кодът на Worker-а (деплой)</text>
+  <text x="906" y="620" font-size="11.5" fill="#1e293b">Изтритото е възстановимо още</text>
+  <text x="906" y="638" font-size="11.5" fill="#1e293b">7 (Free) / 30 (Paid) дни през</text>
+  <text x="906" y="656" font-size="11.5" fill="#1e293b">D1 Time Travel</text>
+
+  <!-- legend -->
+  <rect x="30" y="712" width="1140" height="124" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="46" y="736" font-size="12.5" font-weight="700" fill="#0f172a">Легенда</text>
+  <rect x="46" y="748" width="14" height="14" rx="3" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="68" y="760" font-size="11.5" fill="#1e293b">лични данни на подателя: хеширани (HMAC) или криптирани (AES-256-GCM) с наши ключове; изтриват се след REPORTER_RETENTION_DAYS (по подразбиране 1825 дни)</text>
+  <rect x="46" y="772" width="14" height="14" rx="3" fill="#ffffff" stroke="#fdba74"/>
+  <text x="68" y="784" font-size="11.5" fill="#1e293b">открит текст в базата (защитен само от криптирането на Cloudflare при съхранение); пази се без срок</text>
+  <rect x="46" y="796" width="14" height="14" rx="3" fill="#fef2f2" stroke="#dc2626"/>
+  <text x="68" y="808" font-size="11.5" fill="#1e293b">граница на доверие: който има тези достъпи, има цялата база (без ключовете: без личните данни на подателите)</text>
+  <text x="68" y="828" font-size="11" fill="#64748b">Създайте базата с --jurisdiction eu: ограничението до ЕС се задава само при създаване и не може да се добави после.</text>
+</svg>

@@ -1,0 +1,14 @@
+{
+  "name": "report-form-kit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Report form (React page + Cloudflare Worker backend). Build tooling for the page: esbuild + Tailwind CSS, precompiled for a strict CSP.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.5",
+    "tailwindcss": "^3.4.17"
+  }
+}

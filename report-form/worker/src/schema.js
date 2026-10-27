@@ -91,7 +91,8 @@ export const LIMITS = {
   namePart: { min: 2, max: 40 },
   nameTotal: 120,
   reportedTo: { min: 3, max: 200 },
-  suspect: 300,
+  suspect: 300, // one perpetrator identifier (site, phone, IBAN, profile, wallet...)
+  suspects: 10, // how many of them
   content: { min: 30, max: 5000 },
   email: 254,
   emailLocal: 64,
@@ -101,3 +102,27 @@ export const LIMITS = {
 };
 
 export const ids = (list) => list.map((x) => x.id);
+
+// What kind of perpetrator identifier was typed (for the chip label in the
+// form and the tag in the email). A hint only: everything is kept as typed.
+export const IOC_KINDS = {
+  url: { bg: 'Сайт / линк', en: 'Website / link' },
+  email: { bg: 'Имейл', en: 'Email' },
+  phone: { bg: 'Телефон', en: 'Phone' },
+  iban: { bg: 'IBAN', en: 'IBAN' },
+  crypto: { bg: 'Крипто адрес', en: 'Crypto address' },
+  handle: { bg: 'Профил', en: 'Profile' },
+  other: { bg: 'Друго', en: 'Other' },
+};
+
+export const classifyIoc = (raw) => {
+  const s = String(raw || '').trim();
+  const compact = s.replace(/[\s.-]/g, '');
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s)) return 'email';
+  if (/^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/i.test(compact) && /^[A-Z]{2}/i.test(s)) return 'iban';
+  if (/^(bc1[a-z0-9]{20,80}|[13][a-km-zA-HJ-NP-Z1-9]{25,34}|0x[a-fA-F0-9]{40}|T[1-9A-HJ-NP-Za-km-z]{33}|[LM][a-km-zA-HJ-NP-Z1-9]{26,33}|D[5-9A-HJ-NP-U][1-9A-HJ-NP-Za-km-z]{32})$/.test(s)) return 'crypto';
+  if (/^(\+|00)?[\d\s().-]{7,20}$/.test(s) && compact.replace(/[^\d]/g, '').length >= 7) return 'phone';
+  if (/^@[\w.]{2,64}$/.test(s) || /(t\.me|telegram\.me|facebook\.com|fb\.com|instagram\.com|tiktok\.com|x\.com|twitter\.com|wa\.me|viber)\//i.test(s)) return 'handle';
+  if (/^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(?::\d+)?(\/\S*)?$/i.test(s) || /^(https?|hxxps?):\/\//i.test(s)) return 'url';
+  return 'other';
+};

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Loader2, AlertTriangle, CheckCircle, Info, ClipboardList, Paperclip, X, ChevronRight, ArrowLeft, Pencil } from 'lucide-react';
-import { CRIME_TYPES, CRIME_GROUPS, crimeLabel, CHANNELS, CURRENCIES, EVIDENCE, LIMITS } from '../worker/src/schema.js';
+import { Send, Loader2, AlertTriangle, CheckCircle, Info, Paperclip, X, ChevronRight, ArrowLeft, Pencil, Plus } from 'lucide-react';
+import { CRIME_TYPES, CRIME_GROUPS, crimeLabel, CHANNELS, CURRENCIES, EVIDENCE, LIMITS, IOC_KINDS, classifyIoc } from '../worker/src/schema.js';
 import { validateReport } from '../worker/src/validate.js';
 import { FILE_LIMITS, FILE_TYPES, ACCEPT, detectFileType } from '../worker/src/files.js';
 import { REPORT_CONFIG } from './report-config.js';
@@ -25,7 +25,7 @@ const uploadOne = (url, file, onProgress) =>
     });
 
 const EMPTY = {
-    crimeType: '', channel: '', incidentDate: '', lossAmount: '', lossCurrency: 'EUR', suspect: '',
+    crimeType: '', channel: '', incidentDate: '', lossAmount: '', lossCurrency: 'EUR', suspect: '', suspects: [],
     alreadyReported: '', reportedTo: '',
     fullName: '', egn: '', dob: '', phone: '', email: '',
     content: '', evidence: [],
@@ -38,6 +38,10 @@ const FINAL_FIELDS = ['consent', 'truthDeclaration', 'captcha'];
 const L = {
     bg: {
         title: 'ПОДАЙ СИГНАЛ',
+        asidePhones: 'Телефони за сигнали',
+        phones: [['112', 'tel:112', 'Единен европейски номер за спешни повиквания'], ['02 982 83 63', 'tel:+35929828363', 'ГДБОП — МВР'], ['116 000', 'tel:116000', 'Изчезнали деца'], ['116 111', 'tel:116111', 'Деца в риск']],
+        asideAfter: 'След подаването',
+        after: ['Получавате референтен номер – запазете го.', 'Сигналът се разпределя към компетентното звено на ГДБОП.', 'При нужда служител ще се свърже с вас на посочения телефон или имейл.'],
         gateTitle: 'Преди да започнете',
         gateText: 'Тази система не се наблюдава 24/7. Ако случаят е спешен или животът или здравето на някого са застрашени, веднага се обадете на 112.',
         gateConfirm: 'Потвърждавам, че случаят не е спешен',
@@ -57,7 +61,7 @@ const L = {
         evidenceHint: 'Отбележете всичко, с което разполагате, дори да не го прикачвате тук.',
         filesTitle: 'Файлове (по желание)',
         filesHint: `До ${FILE_LIMITS.maxFiles} файла, общо до ${TOTAL_MB} MB: изображения (PNG, JPG, WebP) до ${IMG_MB} MB, PDF документи до ${DOC_MB} MB и имейли (.eml от Gmail/Thunderbird или .msg от Outlook) до ${DOC_MB} MB. Например скрийншоти, договори, банкови извлечения, получени фишинг писма.`,
-        filesWarn: 'Не качвайте документи за самоличност, банкови карти или данни, които не са нужни за сигнала. Файловете се пазят в карантина, проверяват се с антивирус (ClamAV и VirusTotal по хеш), изображенията се прекодират, а получателят ги отваря само от защитена връзка.',
+        filesWarn: 'Не качвайте документи за самоличност, банкови карти или данни, които не са нужни за сигнала.',
         uploading: (i, n) => `Качване на файл ${i} от ${n}…`, finishing: 'Изпращане на сигнала…',
         okFilesFailed: (n) => `${n} от файловете не можаха да бъдат качени. Сигналът е изпратен без тях – можете да ги изпратите отделно, като посочите референтния номер.`,
         filesPick: 'Добави файлове', filesRemove: 'Премахни файла',
@@ -68,7 +72,8 @@ const L = {
         channel: 'Как сте били потърсен/а или къде е станало', channelPh: 'Изберете (по желание)…',
         incidentDate: 'Дата на събитието',
         lossAmount: 'Претърпени вреди (сума)', lossCurrency: 'Валута', lossCurrencyPh: 'Валута…',
-        suspect: 'Данни за извършителя', suspectHint: 'Уебсайт, телефон, профил, IBAN или портфейл – каквото знаете (по желание).',
+        suspect: 'Данни за извършителя', suspectHint: `Сайт, имейл, телефон, профил, IBAN или крипто портфейл – по един наведнъж. Натиснете Enter или „Добави“ и въведете следващия (до ${LIMITS.suspects}, по желание).`,
+        suspectAdd: 'Добави', suspectRemove: 'Премахни', suspectPh: 'напр. invest-profit.com, +359 888 123 456, BG80 BNBG…',
         reported: 'Подавали ли сте вече сигнал в структурно звено на МВР?',
         yes: 'Да, подал/а съм', no: 'Не, още не съм',
         reportedTo: 'Наименование на звеното или номер на сигнала',
@@ -103,6 +108,7 @@ const L = {
         },
         errField: {
             egn: { invalid: 'Невалидно ЕГН.' },
+            suspect: { too_many: `Най-много ${LIMITS.suspects} записа.`, too_long: `Всеки запис – до ${LIMITS.suspect} знака.` },
             dob: { invalid: 'Въведете валидна дата на раждане.', required: 'Датата на раждане е задължителна.' },
             phone: { invalid: 'Въведете мобилен номер, напр. 0888 123 456 или +359 888 123 456.' },
             email: { invalid: 'Невалиден адрес на електронна поща.' },
@@ -136,6 +142,10 @@ const L = {
     },
     en: {
         title: 'SUBMIT A REPORT',
+        asidePhones: 'Phone lines',
+        phones: [['112', 'tel:112', 'Single European emergency number'], ['02 982 83 63', 'tel:+35929828363', 'GDCOC — MoI'], ['116 000', 'tel:116000', 'Missing children'], ['116 111', 'tel:116111', 'Children at risk']],
+        asideAfter: 'After you submit',
+        after: ['You get a reference number – keep it.', 'The report is assigned to the competent GDCOC unit.', 'If needed, an officer will contact you by the phone or email you gave.'],
         gateTitle: 'Before you start',
         gateText: 'This system is not monitored 24/7. If this is an emergency or someone’s life or health is in danger, call 112 immediately.',
         gateConfirm: 'I confirm that this is not an emergency',
@@ -155,7 +165,7 @@ const L = {
         evidenceHint: 'Tick everything you have, even if you do not attach it here.',
         filesTitle: 'Files (optional)',
         filesHint: `Up to ${FILE_LIMITS.maxFiles} files, ${TOTAL_MB} MB in total: images (PNG, JPG, WebP) up to ${IMG_MB} MB, PDF documents up to ${DOC_MB} MB and emails (.eml from Gmail/Thunderbird or .msg from Outlook) up to ${DOC_MB} MB – e.g. screenshots, contracts, bank statements, phishing emails you received.`,
-        filesWarn: 'Do not upload ID documents, bank cards or data that is not needed for the report. Files are held in quarantine and virus-scanned (ClamAV and VirusTotal by hash), images are re-encoded, and the recipient opens them only from a protected link.',
+        filesWarn: 'Do not upload ID documents, bank cards or data that is not needed for the report.',
         uploading: (i, n) => `Uploading file ${i} of ${n}…`, finishing: 'Sending the report…',
         okFilesFailed: (n) => `${n} of the files could not be uploaded. The report was sent without them – you can send them separately quoting the reference number.`,
         filesPick: 'Add files', filesRemove: 'Remove file',
@@ -166,7 +176,8 @@ const L = {
         channel: 'How you were contacted / where it happened', channelPh: 'Select (optional)…',
         incidentDate: 'Date of the incident',
         lossAmount: 'Loss suffered (amount)', lossCurrency: 'Currency', lossCurrencyPh: 'Currency…',
-        suspect: 'Details of the offender', suspectHint: 'Website, phone, profile, IBAN or wallet – whatever you know (optional).',
+        suspect: 'Details of the offender', suspectHint: `Website, email, phone, profile, IBAN or crypto wallet – one at a time. Press Enter or “Add” and type the next one (up to ${LIMITS.suspects}, optional).`,
+        suspectAdd: 'Add', suspectRemove: 'Remove', suspectPh: 'e.g. invest-profit.com, +359 888 123 456, BG80 BNBG…',
         reported: 'Have you already filed a report with a unit of the Ministry of Interior?',
         yes: 'Yes, I have', no: 'No, not yet',
         reportedTo: 'Name of the unit or the report number',
@@ -201,6 +212,7 @@ const L = {
         },
         errField: {
             egn: { invalid: 'Invalid ЕГН.' },
+            suspect: { too_many: `At most ${LIMITS.suspects} entries.`, too_long: `Each entry – at most ${LIMITS.suspect} characters.` },
             dob: { invalid: 'Enter a valid date of birth.', required: 'Date of birth is required.' },
             phone: { invalid: 'Enter a mobile number, e.g. 0888 123 456 or +359 888 123 456.' },
             email: { invalid: 'Invalid email address.' },
@@ -255,11 +267,11 @@ const loadTurnstile = () =>
 // --- UI bits ---------------------------------------------------------------
 
 const inputCls = (invalid) =>
-    `w-full bg-slate-800/80 border ${invalid ? 'border-red-500' : 'border-slate-600'} rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-gdbop-blue focus:ring-1 focus:ring-gdbop-blue [&>option]:bg-slate-800`;
+    `w-full bg-slate-950/60 border ${invalid ? 'border-red-500' : 'border-white/15'} px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-gdbop-blue focus:ring-1 focus:ring-gdbop-blue disabled:opacity-50 [&>option]:bg-slate-900 [&>optgroup]:bg-slate-900`;
 
 const Field = ({ id, label, required, error, hint, children }) => (
     <div>
-        <label htmlFor={id} className="block text-sm font-semibold text-slate-200 mb-1.5">
+        <label htmlFor={id} className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-200 mb-2">
             {label}
             {required && <span className="text-police-red ml-1" aria-hidden="true">*</span>}
         </label>
@@ -273,8 +285,8 @@ const Field = ({ id, label, required, error, hint, children }) => (
 );
 
 const Fieldset = ({ id, legend, children }) => (
-    <fieldset id={id} className="space-y-5 border border-slate-700/60 rounded-xl p-5 md:p-6 scroll-mt-24">
-        <legend className="px-2 text-sm font-bold tracking-wider text-gdbop-blue uppercase">{legend}</legend>
+    <fieldset id={id} className="space-y-5 border border-white/10 bg-slate-900/40 p-5 md:p-7 scroll-mt-32">
+        <legend className="px-2 text-xs font-bold tracking-[0.18em] text-gdbop-blue uppercase">{legend}</legend>
         {children}
     </fieldset>
 );
@@ -286,21 +298,22 @@ const Check = ({ id, checked, onChange, invalid, children }) => (
             checked={checked}
             onChange={(e) => onChange(e.target.checked)}
             aria-invalid={invalid ? 'true' : undefined}
-            className="mt-1 h-4 w-4 shrink-0 accent-[#47a8f6]"
+            className="mt-1 h-4 w-4 shrink-0 accent-[#ffc83d]"
         />
         <span>{children}</span>
     </label>
 );
 
 const ErrorBanner = ({ text }) => (
-    <div role="alert" className="flex gap-3 items-start p-3 rounded-lg bg-red-500/10 border border-red-500/40 text-red-200 text-sm">
+    <div role="alert" className="flex gap-3 items-start p-3 bg-red-500/10 border border-red-500/40 text-red-200 text-sm">
         <AlertTriangle className="shrink-0 mt-0.5" size={18} />
         <p>{text}</p>
     </div>
 );
 
-const primaryBtn = 'inline-flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-gdbop-blue hover:bg-blue-500 disabled:opacity-60 disabled:cursor-not-allowed text-slate-950 font-bold tracking-wide transition-colors';
-const secondaryBtn = 'inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-slate-600 bg-slate-800/80 text-slate-200 hover:border-gdbop-blue hover:text-white transition-colors';
+const primaryBtn = 'inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gdbop-blue border border-gdbop-blue hover:bg-transparent hover:text-gdbop-blue disabled:opacity-60 disabled:cursor-not-allowed text-slate-950 text-xs font-bold uppercase tracking-[0.14em] transition-colors';
+const secondaryBtn = 'inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-gdbop-blue/50 text-gdbop-blue hover:bg-gdbop-blue hover:text-slate-950 text-xs font-bold uppercase tracking-[0.14em] transition-colors';
+const addBtn = 'shrink-0 inline-flex items-center gap-1.5 px-4 border border-gdbop-blue text-gdbop-blue hover:bg-gdbop-blue hover:text-slate-950 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gdbop-blue disabled:cursor-not-allowed text-xs font-bold uppercase tracking-[0.12em] transition-colors';
 
 // Which form section each field lives in (for "Edit" and for error routing).
 const SECTION_OF = {
@@ -374,6 +387,15 @@ export const ReportSection = ({ lang }) => {
         });
     };
     const on = (key) => (e) => setField(key, e.target.value);
+    const addSuspect = () => {
+        const one = values.suspect.trim().replace(/\s+/g, ' ');
+        if (!one) return;
+        if (values.suspects.length >= LIMITS.suspects) { setErrors((e) => ({ ...e, suspect: 'too_many' })); return; }
+        if (one.length > LIMITS.suspect) { setErrors((e) => ({ ...e, suspect: 'too_long' })); return; }
+        setValues((v) => ({ ...v, suspect: '', suspects: v.suspects.includes(one) ? v.suspects : [...v.suspects, one] }));
+        setErrors((e) => { const { suspect: _d, ...rest } = e; return rest; });
+    };
+    const removeSuspect = (i) => setValues((v) => ({ ...v, suspects: v.suspects.filter((_, j) => j !== i) }));
     const toggleEvidence = (id) =>
         setField('evidence', values.evidence.includes(id) ? values.evidence.filter((x) => x !== id) : [...values.evidence, id]);
 
@@ -418,6 +440,9 @@ export const ReportSection = ({ lang }) => {
     // English form: date of birth instead of the ЕГН; Bulgarian form: the reverse.
     const payload = () => ({
         ...values,
+        // a typed but not yet added entry counts too
+        suspects: [...values.suspects, values.suspect.trim()].filter(Boolean),
+        suspect: undefined,
         egn: lang === 'en' ? '' : values.egn,
         dob: lang === 'en' ? values.dob : '',
         notEmergency: true, // the gate was passed
@@ -528,7 +553,7 @@ export const ReportSection = ({ lang }) => {
     const label = (list, id) => list.find((x) => x.id === id)?.[lang] ?? '';
     const issue = (field) =>
         errors[field] ? (
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-red-500/15 text-red-300 px-2 py-1 text-xs">
+            <span className="inline-flex items-center gap-1.5 bg-red-500/15 text-red-300 px-2 py-1 text-xs">
                 <AlertTriangle size={13} /> {msg(field, errors[field])}
             </span>
         ) : null;
@@ -541,7 +566,7 @@ export const ReportSection = ({ lang }) => {
     const ReviewCard = ({ title, section, children }) => {
         const bad = Object.keys(errors).some((k) => SECTION_OF[k] === section);
         return (
-            <div className={`rounded-xl border ${bad ? 'border-red-500/50' : 'border-slate-700/60'} p-4 md:p-5`}>
+            <div className={`border ${bad ? 'border-red-500/50' : 'border-slate-700/60'} p-4 md:p-5`}>
                 <div className="flex items-center justify-between mb-2">
                     <h5 className="font-bold text-white">{title}</h5>
                     <button type="button" onClick={() => editSection(section)} className="inline-flex items-center gap-1.5 text-sm text-gdbop-blue hover:underline">
@@ -554,20 +579,16 @@ export const ReportSection = ({ lang }) => {
     };
 
     return (
-        <section id="report" className="container mx-auto px-4 py-16 z-10 relative">
-            <div className="flex items-center justify-center mb-8 gap-4">
-                <ClipboardList className="text-police-red" size={32} />
-                <h3 className="text-2xl md:text-3xl font-bold text-white text-center border-b-2 border-gdbop-blue pb-2 uppercase">
-                    {view === 'review' ? t.reviewTitle : t.title}
-                </h3>
-                <ClipboardList className="text-police-blue" size={32} />
-            </div>
-
-            <div ref={panelRef} className="max-w-3xl mx-auto glass-panel bg-slate-900/80 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl p-5 md:p-8 scroll-mt-24">
+        <section id="report" className="max-w-[1280px] mx-auto w-full px-4 md:px-6 py-12 md:py-16 relative">
+            <div className="grid lg:grid-cols-[minmax(0,1fr)_300px] gap-8 lg:gap-12 items-start">
+            <div ref={panelRef} className="bg-slate-900 border border-white/10 border-t-2 border-t-gdbop-blue shadow-2xl shadow-black/40 p-5 md:p-10 scroll-mt-32">
+                {view === 'review' && (
+                    <h2 className="relative mb-8 pb-4 text-xl md:text-2xl font-extrabold uppercase tracking-wide text-white after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-16 after:bg-gdbop-blue">{t.reviewTitle}</h2>
+                )}
                 {view === 'gate' && (
-                    <div className="space-y-6 text-center py-2">
-                        <div className="flex gap-3 items-start text-left p-5 rounded-lg bg-red-500/10 border border-red-500/40 text-red-100">
-                            <AlertTriangle className="shrink-0 mt-0.5 text-red-400" size={22} />
+                    <div className="space-y-6 py-2">
+                        <div className="flex gap-3 items-start text-left p-5 bg-slate-800 border border-white/10 border-l-4 border-l-gdbop-blue text-slate-200">
+                            <AlertTriangle className="shrink-0 mt-0.5 text-gdbop-blue" size={22} />
                             <div>
                                 <p className="font-bold text-white mb-1">{t.gateTitle}</p>
                                 <p>{t.gateText}</p>
@@ -591,7 +612,7 @@ export const ReportSection = ({ lang }) => {
                         <button
                             type="button"
                             onClick={() => { setView('gate'); setBanner(''); }}
-                            className="mt-6 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold transition-colors"
+                            className={`mt-6 ${secondaryBtn}`}
                         >
                             {t.again}
                         </button>
@@ -600,11 +621,11 @@ export const ReportSection = ({ lang }) => {
 
                 {view === 'form' && (
                     <form onSubmit={goToReview} method="post" noValidate autoComplete="off" className="space-y-6">
-                        <div className="flex gap-3 items-start p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-100 text-sm">
-                            <Info className="shrink-0 mt-0.5" size={18} />
+                        <div className="flex gap-3 items-start p-5 bg-slate-800 border border-white/10 border-l-4 border-l-gdbop-blue text-slate-200 text-sm">
+                            <Info className="shrink-0 mt-0.5 text-gdbop-blue" size={18} />
                             <div className="space-y-1.5">
                                 {t.notice.map((line, i) => (
-                                    <p key={i} className={i === 0 ? 'font-bold text-amber-50' : i === 1 || i === 2 ? 'font-semibold' : ''}>{line}</p>
+                                    <p key={i} className={i === 0 ? 'font-bold text-white' : i === 1 || i === 2 ? 'font-semibold text-gdbop-blue' : 'text-slate-300'}>{line}</p>
                                 ))}
                             </div>
                         </div>
@@ -627,7 +648,7 @@ export const ReportSection = ({ lang }) => {
                                 </select>
                             </Field>
                             {values.crimeType === 'children' && (
-                                <div className="flex gap-3 items-start p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-100 text-sm">
+                                <div className="flex gap-3 items-start p-3 bg-red-500/10 border border-red-500/30 text-red-100 text-sm">
                                     <AlertTriangle className="shrink-0 mt-0.5" size={18} />
                                     <p>{t.childrenHint}</p>
                                 </div>
@@ -655,8 +676,32 @@ export const ReportSection = ({ lang }) => {
                                 </Field>
                             </div>
                             <Field id="suspect" label={t.suspect} hint={t.suspectHint} error={errText('suspect')}>
-                                <input id="suspect" name="suspect" type="text" maxLength={LIMITS.suspect} value={values.suspect} onChange={on('suspect')} className={inputCls(errors.suspect)} {...aria('suspect')} />
+                                <div className="flex gap-2">
+                                    <input
+                                        id="suspect" name="suspect" type="text" maxLength={LIMITS.suspect} placeholder={t.suspectPh}
+                                        value={values.suspect} onChange={on('suspect')}
+                                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addSuspect(); } }}
+                                        disabled={values.suspects.length >= LIMITS.suspects}
+                                        className={inputCls(errors.suspect)} {...aria('suspect')}
+                                    />
+                                    <button type="button" onClick={addSuspect} aria-label={t.suspectAdd} disabled={!values.suspect.trim() || values.suspects.length >= LIMITS.suspects} className={addBtn}>
+                                        <Plus size={16} /> <span className="hidden sm:inline">{t.suspectAdd}</span>
+                                    </button>
+                                </div>
                             </Field>
+                            {values.suspects.length > 0 && (
+                                <ul className="flex flex-wrap gap-2 -mt-2" aria-label={t.suspect}>
+                                    {values.suspects.map((x, i) => (
+                                        <li key={x} className="inline-flex items-center gap-2 max-w-full bg-slate-800 border border-gdbop-blue/40 pl-2 pr-1 py-1 text-sm">
+                                            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-gdbop-blue">{IOC_KINDS[classifyIoc(x)][lang]}</span>
+                                            <span className="truncate text-slate-100 font-mono text-xs">{x}</span>
+                                            <button type="button" onClick={() => removeSuspect(i)} aria-label={`${t.suspectRemove}: ${x}`} title={t.suspectRemove} className="shrink-0 p-1 text-slate-400 hover:text-red-400">
+                                                <X size={14} />
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </Fieldset>
 
                         <Fieldset id="sec-2" legend={t.s2}>
@@ -666,13 +711,13 @@ export const ReportSection = ({ lang }) => {
                                 </p>
                                 <div className="grid sm:grid-cols-2 gap-3">
                                     {[['yes', t.yes], ['no', t.no]].map(([val, text]) => (
-                                        <label key={val} className="flex items-center gap-3 cursor-pointer rounded-lg border border-slate-600 bg-slate-800/60 px-4 py-3 text-slate-200 hover:border-gdbop-blue has-[:checked]:border-gdbop-blue has-[:checked]:bg-gdbop-blue/10 has-[:checked]:text-white transition-colors">
+                                        <label key={val} className="flex items-center gap-3 cursor-pointer border border-slate-600 bg-slate-800/60 px-4 py-3 text-slate-200 hover:border-gdbop-blue has-[:checked]:border-gdbop-blue has-[:checked]:bg-gdbop-blue/10 has-[:checked]:text-white transition-colors">
                                             <input
                                                 type="radio" name="alreadyReported" value={val}
                                                 checked={values.alreadyReported === val}
                                                 onChange={on('alreadyReported')}
                                                 aria-invalid={errors.alreadyReported ? 'true' : undefined}
-                                                className="h-4 w-4 accent-[#47a8f6]"
+                                                className="h-4 w-4 accent-[#ffc83d]"
                                             />
                                             <span className="font-medium">{text}</span>
                                         </label>
@@ -723,12 +768,12 @@ export const ReportSection = ({ lang }) => {
                                 <p className="text-xs text-slate-400">{t.evidenceHint}</p>
                                 <div className="grid sm:grid-cols-2 gap-2">
                                     {EVIDENCE.map((ev) => (
-                                        <label key={ev.id} className="flex items-center gap-3 cursor-pointer rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2.5 text-sm text-slate-200 hover:border-gdbop-blue has-[:checked]:border-gdbop-blue has-[:checked]:bg-gdbop-blue/10 transition-colors">
+                                        <label key={ev.id} className="flex items-center gap-3 cursor-pointer border border-slate-700 bg-slate-800/50 px-3 py-2.5 text-sm text-slate-200 hover:border-gdbop-blue has-[:checked]:border-gdbop-blue has-[:checked]:bg-gdbop-blue/10 transition-colors">
                                             <input
                                                 type="checkbox" name="evidence" value={ev.id}
                                                 checked={values.evidence.includes(ev.id)}
                                                 onChange={() => toggleEvidence(ev.id)}
-                                                className="h-4 w-4 shrink-0 accent-[#47a8f6]"
+                                                className="h-4 w-4 shrink-0 accent-[#ffc83d]"
                                             />
                                             <span>{ev[lang]}</span>
                                         </label>
@@ -742,7 +787,7 @@ export const ReportSection = ({ lang }) => {
                                     <p className="text-sm font-semibold text-slate-200">{t.filesTitle}</p>
                                     {values.crimeType === 'children' && (
                                         <div className="space-y-3">
-                                            <div className="flex gap-3 items-start p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-100 text-sm">
+                                            <div className="flex gap-3 items-start p-3 bg-red-500/10 border border-red-500/30 text-red-100 text-sm">
                                                 <AlertTriangle className="shrink-0 mt-0.5" size={18} />
                                                 <p>{t.childrenWarn}</p>
                                             </div>
@@ -753,7 +798,7 @@ export const ReportSection = ({ lang }) => {
                                         </div>
                                     )}
                                     <p className="text-sm text-slate-300">{t.filesHint}</p>
-                                    <div className="flex gap-3 items-start p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-100 text-xs">
+                                    <div className="flex gap-3 items-start p-3 bg-slate-800 border border-white/10 border-l-4 border-l-gdbop-blue text-slate-300 text-xs">
                                         <Info className="shrink-0 mt-0.5" size={16} />
                                         <p>{t.filesWarn}</p>
                                     </div>
@@ -769,7 +814,7 @@ export const ReportSection = ({ lang }) => {
                                             type="button"
                                             onClick={() => fileInput.current?.click()}
                                             disabled={files.length >= FILE_LIMITS.maxFiles}
-                                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-slate-600 bg-slate-800/80 text-slate-200 hover:border-gdbop-blue hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            className={`${addBtn} py-3`}
                                         >
                                             <Paperclip size={16} />
                                             {t.filesPick} ({files.length}/{FILE_LIMITS.maxFiles})
@@ -779,7 +824,7 @@ export const ReportSection = ({ lang }) => {
                                     {files.length > 0 && (
                                         <ul className="space-y-2">
                                             {files.map(({ file: f, kind }, i) => (
-                                                <li key={`${f.name}-${f.size}-${f.lastModified}`} className="flex items-center justify-between gap-3 rounded-lg bg-slate-800/60 border border-slate-700 px-3 py-2 text-sm">
+                                                <li key={`${f.name}-${f.size}-${f.lastModified}`} className="flex items-center justify-between gap-3 bg-slate-800/60 border border-slate-700 px-3 py-2 text-sm">
                                                     <span className="truncate text-slate-200">{f.name}</span>
                                                     <span className="shrink-0 flex items-center gap-3">
                                                         <span className="text-[10px] font-bold font-mono px-1.5 py-0.5 rounded bg-slate-700 text-slate-200">{FILE_TYPES[kind].label}</span>
@@ -814,7 +859,7 @@ export const ReportSection = ({ lang }) => {
                             <Row name={t.channel} field="channel">{label(CHANNELS, values.channel)}</Row>
                             <Row name={t.incidentDate} field="incidentDate">{values.incidentDate}</Row>
                             <Row name={t.lossAmount} field="lossAmount">{values.lossAmount && `${values.lossAmount} ${label(CURRENCIES, values.lossCurrency)}`}</Row>
-                            <Row name={t.suspect} field="suspect">{values.suspect}</Row>
+                            <Row name={t.suspect} field="suspect">{payload().suspects.length > 0 && <span className="block text-left sm:text-right">{payload().suspects.map((x) => `${IOC_KINDS[classifyIoc(x)][lang]}: ${x}`).join('; ')}</span>}</Row>
                         </ReviewCard>
 
                         <ReviewCard title={t.s2} section="sec-2">
@@ -855,7 +900,7 @@ export const ReportSection = ({ lang }) => {
                             {values.crimeType === 'children' && files.length > 0 && <Row name={t.childrenAck} field="childrenAck">{values.childrenAck ? '✓' : ''}</Row>}
                         </ReviewCard>
 
-                        <div className="space-y-3 rounded-xl border border-slate-700/60 p-4 md:p-5">
+                        <div className="space-y-3 border border-slate-700/60 p-4 md:p-5">
                             <Check id="truthDeclaration" checked={values.truthDeclaration} onChange={(v) => setField('truthDeclaration', v)} invalid={errors.truthDeclaration}>
                                 {t.truthDeclaration}<span className="text-police-red ml-1" aria-hidden="true">*</span>
                             </Check>
@@ -890,6 +935,33 @@ export const ReportSection = ({ lang }) => {
                         </div>
                     </div>
                 )}
+            </div>
+            <aside className="space-y-6 lg:sticky lg:top-28">
+                <div className="bg-slate-900 border border-white/10 border-l-[3px] border-l-gdbop-blue p-6">
+                    <h4 className="text-xs font-bold uppercase tracking-[0.16em] text-gdbop-blue mb-3">{t.asidePhones}</h4>
+                    <ul>
+                        {t.phones.map(([num, href, lbl]) => (
+                            <li key={num} className="border-t border-white/5 first:border-0 py-2.5">
+                                <a href={href} className="block group">
+                                    <span className="block text-lg font-bold text-white group-hover:text-gdbop-blue">{num}</span>
+                                    <span className="block text-xs text-slate-300">{lbl}</span>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="bg-slate-900 border border-white/10 border-l-[3px] border-l-gdbop-blue p-6">
+                    <h4 className="text-xs font-bold uppercase tracking-[0.16em] text-gdbop-blue mb-3">{t.asideAfter}</h4>
+                    <ol className="space-y-3">
+                        {t.after.map((x, i) => (
+                            <li key={i} className="flex gap-3 text-sm text-slate-300">
+                                <span className="shrink-0 w-6 h-6 inline-flex items-center justify-center border border-gdbop-blue/60 text-gdbop-blue text-xs font-bold">{i + 1}</span>
+                                <span>{x}</span>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
+            </aside>
             </div>
         </section>
     );

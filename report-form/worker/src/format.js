@@ -1,7 +1,7 @@
 // Builds the plain-text email for a validated report. Only validated/normalised
 // values and server-side labels reach the output; the free-text content is
 // defanged so no reported URL or domain becomes clickable.
-import { CHANNELS, CURRENCIES, EVIDENCE, crimeLabel } from './schema.js';
+import { CHANNELS, CURRENCIES, EVIDENCE, IOC_KINDS, crimeLabel, classifyIoc } from './schema.js';
 import { REPORT_ID_PREFIX, FILE_TYPES } from './files.js';
 import { scanText, defangUrl } from './validate.js';
 import { KIND_LABELS } from './intel.js';
@@ -82,7 +82,7 @@ const intelLines = (intel) => {
 
 export const buildReportEmail = (v, { id, receivedAt, country, files = [], intel = null, brand = 'example.bg', incomplete = false }) => {
   const scan = scanText(v.content);
-  const suspect = v.suspect ? scanText(v.suspect).defanged : '';
+  const suspects = (v.suspects || (v.suspect ? [v.suspect] : [])).map((x) => `[${IOC_KINDS[classifyIoc(x)].bg}] ${scanText(x).defanged}`);
   const loss = v.lossAmount ? `${v.lossAmount.replace(',', '.')} ${label(CURRENCIES, v.lossCurrency)}` : '';
 
   const lines = [
@@ -94,7 +94,7 @@ export const buildReportEmail = (v, { id, receivedAt, country, files = [], intel
     `Канал на контакт: ${label(CHANNELS, v.channel) || '-'}`,
     `Дата на събитието: ${v.incidentDate || '-'}`,
     `Претърпени вреди: ${loss || '-'}`,
-    `Данни за извършителя: ${suspect || '-'}`,
+    ...(suspects.length ? ['Данни за извършителя:', ...suspects.map((x, i) => `  ${i + 1}. ${x}`)] : ['Данни за извършителя: -']),
     `Налични доказателства: ${(v.evidence || []).map((id) => label(EVIDENCE, id)).join('; ') || '-'}`,
     '',
     '== ПОДАДЕН СИГНАЛ В МВР ==',

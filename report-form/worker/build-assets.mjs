@@ -20,9 +20,8 @@ const files = [
   'assets/webfonts/montserrat-500.ttf',
   'assets/webfonts/montserrat-600.ttf',
   'assets/webfonts/montserrat-700.ttf',
-  'images/favicon.png',
-  'images/gdcoc_logo_bg.png',
-  'images/gdcoc_logo_en.png',
+  'images/logo-bg.png',
+  'images/logo-en.png',
 ];
 
 rmSync(out, { recursive: true, force: true });

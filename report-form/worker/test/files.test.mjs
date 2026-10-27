@@ -412,3 +412,21 @@ test('maintenance mode still lets the scanner report and links download', async 
 test('every kind has a size limit within the total', () => {
   for (const t of Object.values(FILE_TYPES)) assert.ok(t.maxBytes <= FILE_LIMITS.maxTotalBytes);
 });
+
+test('perpetrator identifiers: a list, one per line in the email, tagged and defanged', async () => {
+  const ctx = setup();
+  const suspects = ['scam-invest.com', 'https://t.me/fakebank', 'BG80 BNBG 9661 1020 3456 78', '0888 123 456', 'scam-invest.com', '  '];
+  const res = await handleRequest(post('/api/report', report({ suspects })), ctx.env, ctx.deps);
+  assert.equal(res.status, 200);
+  const text = emailText(ctx.sent[0].raw);
+  assert.match(text, /Данни за извършителя:\n {2}1\. \[Сайт \/ линк\] scam-invest\[\.\]com\n {2}2\. \[Профил\] hxxps\[:\/\/\]t\[\.\]me\/fakebank\n {2}3\. \[IBAN\] BG80 BNBG 9661 1020 3456 78\n {2}4\. \[Телефон\] 0888 123 456\n/);
+  assert.doesNotMatch(text, / {2}5\./, 'duplicates and blanks are dropped');
+
+  const many = await handleRequest(post('/api/report', report({ suspects: Array.from({ length: 11 }, (_, i) => `site${i}.com`) })), ctx.env, ctx.deps);
+  assert.equal((await many.json()).fields.suspect, 'too_many');
+  const bad = await handleRequest(post('/api/report', report({ suspects: ['ok.com', '<script>alert(1)</script>'] })), ctx.env, ctx.deps);
+  assert.equal((await bad.json()).fields.suspect, 'dangerous');
+  const none = setup();
+  await handleRequest(post('/api/report', report()), none.env, none.deps);
+  assert.match(emailText(none.sent[0].raw), /Данни за извършителя: -/);
+});

@@ -218,8 +218,20 @@ export const validateReport = (raw) => {
     v.lossCurrency = '';
   }
 
-  v.suspect = single('suspect');
-  if (v.suspect.length > LIMITS.suspect) errors.suspect = 'too_long';
+  // Perpetrator identifiers: a list (one site / phone / IBAN / profile each),
+  // or the older single text field. Single-line, deduplicated, limited.
+  const rawSuspects = Array.isArray(raw.suspects) ? raw.suspects : (raw.suspect !== undefined && raw.suspect !== null ? [raw.suspect] : []);
+  v.suspects = [];
+  if (rawSuspects.length > LIMITS.suspects) errors.suspect = 'too_many';
+  for (const item of rawSuspects.slice(0, LIMITS.suspects)) {
+    if (typeof item !== 'string') { errors.suspect = 'invalid'; break; }
+    const one = clean(item);
+    if (!one) continue;
+    if (one.length > LIMITS.suspect) { errors.suspect = 'too_long'; break; }
+    if (looksDangerous(one)) { errors.suspect = 'dangerous'; break; }
+    if (!v.suspects.includes(one)) v.suspects.push(one);
+  }
+  v.suspect = v.suspects.join(' ; ');
 
   // already reported to an MVR unit? explicit yes/no is mandatory
   v.alreadyReported = str('alreadyReported');

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Loader2, AlertTriangle, CheckCircle, Info, Paperclip, X, ChevronRight, ArrowLeft, Pencil, Plus } from 'lucide-react';
+import { Send, Loader2, AlertTriangle, Check, Info, Paperclip, X, ChevronRight, ChevronDown, ChevronLeft, Plus, Phone, ShieldAlert, FileText, Image as ImageIcon, Mail, Copy } from 'lucide-react';
 import { CRIME_TYPES, CRIME_GROUPS, crimeLabel, CHANNELS, CURRENCIES, EVIDENCE, LIMITS, IOC_KINDS, classifyIoc } from '../worker/src/schema.js';
 import { validateReport } from '../worker/src/validate.js';
 import { FILE_LIMITS, FILE_TYPES, ACCEPT, detectFileType } from '../worker/src/files.js';
@@ -38,6 +38,11 @@ const FINAL_FIELDS = ['consent', 'truthDeclaration', 'captcha'];
 const L = {
     bg: {
         title: 'ПОДАЙ СИГНАЛ',
+        steps: ['За какво е сигналът', 'Подаден ли е сигнал в МВР', 'Вашите данни', 'Какво се случи', 'Доказателства'],
+        stepOf: (i, n) => `Стъпка ${i} от ${n}`,
+        next: 'Напред', prev: 'Назад', call112: 'Обади се на 112',
+        copy: 'Копирай', copied: 'Копирано',
+        groupCase: 'Случаят', groupLoss: 'Вреди', groupSuspect: 'Извършител', groupContact: 'Контакт', groupDecl: 'Декларации',
         asidePhones: 'Телефони за сигнали',
         phones: [['112', 'tel:112', 'Единен европейски номер за спешни повиквания'], ['02 982 83 63', 'tel:+35929828363', 'ГДБОП — МВР'], ['116 000', 'tel:116000', 'Изчезнали деца'], ['116 111', 'tel:116111', 'Деца в риск']],
         asideAfter: 'След подаването',
@@ -142,6 +147,11 @@ const L = {
     },
     en: {
         title: 'SUBMIT A REPORT',
+        steps: ['What the report is about', 'Already reported?', 'Your details', 'What happened', 'Evidence'],
+        stepOf: (i, n) => `Step ${i} of ${n}`,
+        next: 'Continue', prev: 'Back', call112: 'Call 112',
+        copy: 'Copy', copied: 'Copied',
+        groupCase: 'The case', groupLoss: 'Loss', groupSuspect: 'Offender', groupContact: 'Contact', groupDecl: 'Declarations',
         asidePhones: 'Phone lines',
         phones: [['112', 'tel:112', 'Single European emergency number'], ['02 982 83 63', 'tel:+35929828363', 'GDCOC — MoI'], ['116 000', 'tel:116000', 'Missing children'], ['116 111', 'tel:116111', 'Children at risk']],
         asideAfter: 'After you submit',
@@ -264,58 +274,11 @@ const loadTurnstile = () =>
         s.addEventListener('error', reject);
     });
 
-// --- UI bits ---------------------------------------------------------------
+// --- UI bits (iOS-style grouped lists, gdbop navy + gold) ------------------
 
-const inputCls = (invalid) =>
-    `w-full bg-slate-950/60 border ${invalid ? 'border-red-500' : 'border-white/15'} px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-gdbop-blue focus:ring-1 focus:ring-gdbop-blue disabled:opacity-50 [&>option]:bg-slate-900 [&>optgroup]:bg-slate-900`;
+const SECTIONS = ['sec-1', 'sec-2', 'sec-3', 'sec-4', 'sec-5'];
 
-const Field = ({ id, label, required, error, hint, children }) => (
-    <div>
-        <label htmlFor={id} className="block text-xs font-semibold uppercase tracking-[0.08em] text-slate-200 mb-2">
-            {label}
-            {required && <span className="text-police-red ml-1" aria-hidden="true">*</span>}
-        </label>
-        {children}
-        {error ? (
-            <p id={`${id}-err`} role="alert" className="mt-1 text-xs text-red-400">{error}</p>
-        ) : hint ? (
-            <p id={`${id}-hint`} className="mt-1 text-xs text-slate-400">{hint}</p>
-        ) : null}
-    </div>
-);
-
-const Fieldset = ({ id, legend, children }) => (
-    <fieldset id={id} className="space-y-5 border border-white/10 bg-slate-900/40 p-5 md:p-7 scroll-mt-32">
-        <legend className="px-2 text-xs font-bold tracking-[0.18em] text-gdbop-blue uppercase">{legend}</legend>
-        {children}
-    </fieldset>
-);
-
-const Check = ({ id, checked, onChange, invalid, children }) => (
-    <label className="flex gap-3 items-start cursor-pointer text-sm text-slate-200">
-        <input
-            id={id} name={id} type="checkbox"
-            checked={checked}
-            onChange={(e) => onChange(e.target.checked)}
-            aria-invalid={invalid ? 'true' : undefined}
-            className="mt-1 h-4 w-4 shrink-0 accent-[#ffc83d]"
-        />
-        <span>{children}</span>
-    </label>
-);
-
-const ErrorBanner = ({ text }) => (
-    <div role="alert" className="flex gap-3 items-start p-3 bg-red-500/10 border border-red-500/40 text-red-200 text-sm">
-        <AlertTriangle className="shrink-0 mt-0.5" size={18} />
-        <p>{text}</p>
-    </div>
-);
-
-const primaryBtn = 'inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gdbop-blue border border-gdbop-blue hover:bg-transparent hover:text-gdbop-blue disabled:opacity-60 disabled:cursor-not-allowed text-slate-950 text-xs font-bold uppercase tracking-[0.14em] transition-colors';
-const secondaryBtn = 'inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-gdbop-blue/50 text-gdbop-blue hover:bg-gdbop-blue hover:text-slate-950 text-xs font-bold uppercase tracking-[0.14em] transition-colors';
-const addBtn = 'shrink-0 inline-flex items-center gap-1.5 px-4 border border-gdbop-blue text-gdbop-blue hover:bg-gdbop-blue hover:text-slate-950 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-gdbop-blue disabled:cursor-not-allowed text-xs font-bold uppercase tracking-[0.12em] transition-colors';
-
-// Which form section each field lives in (for "Edit" and for error routing).
+// Which form section each field lives in (for steps, "Edit" and error routing).
 const SECTION_OF = {
     crimeType: 'sec-1', channel: 'sec-1', incidentDate: 'sec-1', lossAmount: 'sec-1', lossCurrency: 'sec-1', suspect: 'sec-1',
     alreadyReported: 'sec-2', reportedTo: 'sec-2',
@@ -324,17 +287,100 @@ const SECTION_OF = {
     evidence: 'sec-5', files: 'sec-5', childrenAck: 'sec-5',
 };
 
+const cx = (...a) => a.filter(Boolean).join(' ');
+
+// A grouped list: small header above, rounded block of rows, footnote below.
+const Group = ({ header, footer, children, tone }) => (
+    <div>
+        {header && <p className="px-4 pb-1.5 text-[13px] text-ios-label">{header}</p>}
+        <div className={cx('rounded-[14px] overflow-hidden divide-y divide-white/[0.07]', tone === 'warn' ? 'bg-gdbop-blue/[0.08] ring-1 ring-inset ring-gdbop-blue/25' : 'bg-ios-cell')}>
+            {children}
+        </div>
+        {footer && <div className="px-4 pt-1.5 text-[13px] leading-snug text-ios-label">{footer}</div>}
+    </div>
+);
+
+const cellBase = 'block px-4 py-2.5 transition-colors focus-within:bg-white/[0.035] focus-within:shadow-[inset_3px_0_0_0_#ffc83d]';
+const ctrl = 'block w-full bg-transparent text-[16px] leading-6 text-ios-text placeholder:text-ios-label/60 outline-none disabled:opacity-50';
+
+// One labelled row: label on top, the control below (iOS "stacked" cell).
+const Cell = ({ id, label, required, error, hint, children, accessory }) => (
+    <div className={cellBase}>
+        <label htmlFor={id} className={cx('block text-[13px] leading-snug', error ? 'text-ios-red' : 'text-ios-label')}>
+            {label}
+            {required && <span aria-hidden="true" className="text-gdbop-blue"> *</span>}
+        </label>
+        <div className="flex items-center gap-2 pt-0.5">
+            <div className="flex-1 min-w-0">{children}</div>
+            {accessory}
+        </div>
+        {error ? (
+            <p id={`${id}-err`} role="alert" className="pt-1 text-[13px] text-ios-red">{error}</p>
+        ) : hint ? (
+            <p id={`${id}-hint`} className="pt-1 text-[12.5px] leading-snug text-ios-label">{hint}</p>
+        ) : null}
+    </div>
+);
+
+const SelectCtrl = ({ children, ...props }) => (
+    <div className="relative">
+        <select {...props} className={cx(ctrl, 'appearance-none pr-7 cursor-pointer [&>option]:bg-ios-sheet [&>optgroup]:bg-ios-sheet')}>{children}</select>
+        <ChevronDown size={18} className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-ios-label" aria-hidden="true" />
+    </div>
+);
+
+// iOS switch. A real <button role="switch"> so it is keyboard and screen-reader friendly.
+const Switch = ({ id, checked, onChange, invalid, children }) => (
+    <div className={cx(cellBase, 'flex items-start gap-4')}>
+        <label htmlFor={id} className={cx('flex-1 text-[15px] leading-snug cursor-pointer', invalid ? 'text-ios-red' : 'text-ios-text')}>{children}</label>
+        <button
+            id={id} type="button" role="switch" aria-checked={checked} aria-invalid={invalid ? 'true' : undefined}
+            onClick={() => onChange(!checked)}
+            className={cx('relative mt-0.5 shrink-0 w-[51px] h-[31px] rounded-full transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-gdbop-blue focus-visible:ring-offset-2 focus-visible:ring-offset-ios-cell', checked ? 'bg-gdbop-blue' : invalid ? 'bg-ios-red/40' : 'bg-white/20')}
+        >
+            <span className={cx('absolute top-[2px] left-[2px] w-[27px] h-[27px] rounded-full bg-white shadow-[0_3px_8px_rgba(0,0,0,.25)] transition-transform duration-200', checked && 'translate-x-[20px]')} />
+        </button>
+    </div>
+);
+
+// iOS segmented control.
+const Segmented = ({ name, value, onChange, options, invalid, labelledBy }) => (
+    <div role="radiogroup" aria-labelledby={labelledBy} className={cx('grid gap-0.5 p-0.5 rounded-[10px] bg-black/25', invalid && 'ring-1 ring-ios-red')} style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0,1fr))` }}>
+        {options.map(([val, text]) => (
+            <label key={val} className={cx('relative text-center rounded-[8px] px-3 py-2 text-[14px] font-medium cursor-pointer transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gdbop-blue', value === val ? 'bg-ios-cell2 text-ios-text shadow-[0_2px_6px_rgba(0,0,0,.3)]' : 'text-ios-label hover:text-ios-text')}>
+                <input type="radio" name={name} value={val} checked={value === val} onChange={() => onChange(val)} aria-invalid={invalid ? 'true' : undefined} className="sr-only" />
+                {text}
+            </label>
+        ))}
+    </div>
+);
+
+const ErrorBanner = ({ text }) => (
+    <div role="alert" className="flex gap-3 items-start rounded-[12px] bg-ios-red/12 ring-1 ring-inset ring-ios-red/30 px-4 py-3 text-[14px] text-red-100">
+        <AlertTriangle className="shrink-0 mt-0.5 text-ios-red" size={18} />
+        <p>{text}</p>
+    </div>
+);
+
+const primaryBtn = 'inline-flex items-center justify-center gap-2 min-h-[50px] px-7 rounded-[14px] bg-gdbop-blue text-[#0b2350] text-[16px] font-semibold tracking-[-0.01em] hover:bg-gdbop-gold-light active:scale-[0.98] transition disabled:opacity-60 disabled:cursor-not-allowed outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ios-sheet';
+const plainBtn = 'inline-flex items-center justify-center gap-1 min-h-[50px] px-4 rounded-[14px] text-gdbop-blue text-[16px] font-medium hover:bg-white/[0.05] transition outline-none focus-visible:ring-2 focus-visible:ring-gdbop-blue';
+const tintBtn = 'inline-flex items-center justify-center gap-2 min-h-[50px] px-6 rounded-[14px] bg-ios-cell text-gdbop-blue text-[16px] font-semibold hover:bg-ios-cell2 transition outline-none focus-visible:ring-2 focus-visible:ring-gdbop-blue';
+
+const FILE_ICON = { image: ImageIcon, pdf: FileText, mail: Mail };
+
 // --- Section ---------------------------------------------------------------
 
 export const ReportSection = ({ lang }) => {
     const t = L[lang];
-    // gate (not-an-emergency) -> form -> review -> success
+    // gate (not-an-emergency) -> form (5 steps) -> review -> success
     const [view, setView] = useState('gate');
+    const [step, setStep] = useState(0);
     const [values, setValues] = useState(EMPTY);
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [banner, setBanner] = useState('');
     const [refId, setRefId] = useState('');
+    const [copied, setCopied] = useState(false);
     const [token, setToken] = useState('');
     const [files, setFiles] = useState([]); // [{ file, kind }]
     const [progress, setProgress] = useState(null); // { i, n, frac } while uploading
@@ -456,25 +502,44 @@ export const ReportSection = ({ lang }) => {
         return found;
     };
 
-    const goToReview = (e) => {
-        e.preventDefault();
+    // Step navigation: only the current step's fields block "Continue".
+    const nextStep = (e) => {
+        e?.preventDefault();
         setBanner('');
-        const found = formErrors();
-        if (Object.keys(found).length) {
-            setErrors(found);
-            setBanner(t.fixErrors);
+        const all = formErrors();
+        const here = Object.fromEntries(Object.entries(all).filter(([k]) => SECTION_OF[k] === SECTIONS[step]));
+        if (Object.keys(here).length) {
+            setErrors(here);
             focusFirstError();
             return;
         }
         setErrors({});
-        setView('review');
+        if (step < SECTIONS.length - 1) {
+            setStep(step + 1);
+        } else if (Object.keys(all).length) {
+            // something in an earlier step went wrong after all: go there
+            const first = SECTIONS.findIndex((sec) => Object.keys(all).some((k) => SECTION_OF[k] === sec));
+            setErrors(all);
+            setStep(first);
+            setBanner(t.fixErrors);
+        } else {
+            setView('review');
+        }
+        scrollTop();
+    };
+    const prevStep = () => {
+        setBanner('');
+        setErrors({});
+        if (step === 0) setView('gate');
+        else setStep(step - 1);
         scrollTop();
     };
 
     const editSection = (sectionId) => {
         setBanner('');
+        setStep(Math.max(0, SECTIONS.indexOf(sectionId)));
         setView('form');
-        requestAnimationFrame(() => document.getElementById(sectionId)?.scrollIntoView({ block: 'start', behavior: 'smooth' }));
+        scrollTop();
     };
 
     const send = async () => {
@@ -503,6 +568,7 @@ export const ReportSection = ({ lang }) => {
             setValues(EMPTY); // drop personal data from memory
             setFiles([]);
             setErrors({});
+            setStep(0);
             setView('success');
             scrollTop();
         };
@@ -549,419 +615,452 @@ export const ReportSection = ({ lang }) => {
         }
     };
 
+    const copyRef = async () => {
+        try { await navigator.clipboard.writeText(refId); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { /* clipboard blocked */ }
+    };
+
     // --- review helpers ---
     const label = (list, id) => list.find((x) => x.id === id)?.[lang] ?? '';
-    const issue = (field) =>
-        errors[field] ? (
-            <span className="inline-flex items-center gap-1.5 bg-red-500/15 text-red-300 px-2 py-1 text-xs">
-                <AlertTriangle size={13} /> {msg(field, errors[field])}
-            </span>
-        ) : null;
-    const Row = ({ name, field, children }) => (
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-6 py-2.5 border-b border-slate-700/50 last:border-0">
-            <dt className="text-sm font-semibold text-slate-300 sm:w-2/5">{name}</dt>
-            <dd className="text-sm text-slate-100 sm:w-3/5 sm:text-right break-words">{issue(field) || children || <span className="text-slate-500">{t.none}</span>}</dd>
+    const Row = ({ name, field, children, stacked }) => (
+        <div className={cx('px-4 py-3', stacked ? 'space-y-1' : 'flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6')}>
+            <dt className={cx('text-[15px] text-ios-label', !stacked && 'sm:max-w-[48%]')}>{name}</dt>
+            <dd className={cx('text-[15px] break-words min-w-0 text-ios-text', !stacked && 'sm:text-right')}>
+                {errors[field]
+                    ? <span className="inline-flex items-center gap-1.5 text-ios-red text-[14px]"><AlertTriangle size={14} /> {msg(field, errors[field])}</span>
+                    : children || <span className="text-ios-label/60">{t.none}</span>}
+            </dd>
         </div>
     );
-    const ReviewCard = ({ title, section, children }) => {
-        const bad = Object.keys(errors).some((k) => SECTION_OF[k] === section);
+    const ReviewGroup = ({ index, children }) => {
+        const bad = Object.keys(errors).some((k) => SECTION_OF[k] === SECTIONS[index]);
         return (
-            <div className={`border ${bad ? 'border-red-500/50' : 'border-slate-700/60'} p-4 md:p-5`}>
-                <div className="flex items-center justify-between mb-2">
-                    <h5 className="font-bold text-white">{title}</h5>
-                    <button type="button" onClick={() => editSection(section)} className="inline-flex items-center gap-1.5 text-sm text-gdbop-blue hover:underline">
-                        <Pencil size={14} /> {t.edit}
-                    </button>
+            <div>
+                <div className="flex items-end justify-between px-4 pb-1.5">
+                    <p className={cx('text-[13px]', bad ? 'text-ios-red' : 'text-ios-label')}>{t.steps[index]}</p>
+                    <button type="button" onClick={() => editSection(SECTIONS[index])} className="text-[15px] text-gdbop-blue hover:underline outline-none focus-visible:underline">{t.edit}</button>
                 </div>
-                <dl>{children}</dl>
+                <dl className={cx('rounded-[14px] bg-ios-cell divide-y divide-white/[0.07]', bad && 'ring-1 ring-inset ring-ios-red/50')}>{children}</dl>
             </div>
         );
     };
 
+    const inForm = view === 'form';
+    const n = SECTIONS.length;
+
     return (
-        <section id="report" className="max-w-[1280px] mx-auto w-full px-4 md:px-6 py-12 md:py-16 relative">
-            <div className="grid lg:grid-cols-[minmax(0,1fr)_300px] gap-8 lg:gap-12 items-start">
-            <div ref={panelRef} className="bg-slate-900 border border-white/10 border-t-2 border-t-gdbop-blue shadow-2xl shadow-black/40 p-5 md:p-10 scroll-mt-32">
-                {view === 'review' && (
-                    <h2 className="relative mb-8 pb-4 text-xl md:text-2xl font-extrabold uppercase tracking-wide text-white after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-16 after:bg-gdbop-blue">{t.reviewTitle}</h2>
-                )}
-                {view === 'gate' && (
-                    <div className="space-y-6 py-2">
-                        <div className="flex gap-3 items-start text-left p-5 bg-slate-800 border border-white/10 border-l-4 border-l-gdbop-blue text-slate-200">
-                            <AlertTriangle className="shrink-0 mt-0.5 text-gdbop-blue" size={22} />
-                            <div>
-                                <p className="font-bold text-white mb-1">{t.gateTitle}</p>
-                                <p>{t.gateText}</p>
+        <section id="report" className="max-w-[1280px] mx-auto w-full px-4 md:px-6 py-10 md:py-14 relative font-ios">
+            <div className="grid lg:grid-cols-[minmax(0,720px)_300px] lg:justify-between gap-8 lg:gap-12 items-start">
+                <div ref={panelRef} className="rounded-[22px] bg-ios-sheet ring-1 ring-white/[0.06] shadow-[0_40px_90px_-30px_rgba(0,0,0,.65)] px-4 py-6 sm:px-8 sm:py-8 scroll-mt-28">
+
+                    {view === 'gate' && (
+                        <div className="space-y-6">
+                            <div className="w-14 h-14 rounded-[16px] bg-ios-cell2 grid place-items-center">
+                                <ShieldAlert className="text-gdbop-blue" size={28} />
+                            </div>
+                            <div className="space-y-2">
+                                <h2 className="text-[26px] leading-8 font-bold tracking-[-0.02em] text-ios-text">{t.gateTitle}</h2>
+                                <p className="text-[16px] leading-relaxed text-ios-label max-w-[56ch]">{t.gateText}</p>
+                            </div>
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                <button type="button" onClick={() => { setStep(0); setView('form'); scrollTop(); }} className={primaryBtn}>
+                                    {t.gateConfirm} <ChevronRight size={18} />
+                                </button>
+                                <a href="tel:112" className={tintBtn}><Phone size={17} /> {t.call112}</a>
                             </div>
                         </div>
-                        <button type="button" onClick={() => { setView('form'); scrollTop(); }} className={primaryBtn}>
-                            {t.gateConfirm} <ChevronRight size={18} />
-                        </button>
-                    </div>
-                )}
+                    )}
 
-                {view === 'success' && (
-                    <div className="text-center py-8" role="status">
-                        <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-400" />
-                        <h4 className="text-2xl font-bold text-white mb-2">{t.okTitle}</h4>
-                        <p className="text-slate-300">
-                            {t.okRef} <span className="font-mono text-gdbop-blue font-bold">{refId}</span>
-                        </p>
-                        <p className="text-slate-400 text-sm mt-1">{t.okKeep}</p>
-                        {failedUploads > 0 && <p className="mt-4 text-amber-200 text-sm max-w-md mx-auto">{t.okFilesFailed(failedUploads)}</p>}
-                        <button
-                            type="button"
-                            onClick={() => { setView('gate'); setBanner(''); }}
-                            className={`mt-6 ${secondaryBtn}`}
-                        >
-                            {t.again}
-                        </button>
-                    </div>
-                )}
-
-                {view === 'form' && (
-                    <form onSubmit={goToReview} method="post" noValidate autoComplete="off" className="space-y-6">
-                        <div className="flex gap-3 items-start p-5 bg-slate-800 border border-white/10 border-l-4 border-l-gdbop-blue text-slate-200 text-sm">
-                            <Info className="shrink-0 mt-0.5 text-gdbop-blue" size={18} />
+                    {view === 'success' && (
+                        <div className="text-center py-6 space-y-5" role="status">
+                            <div className="mx-auto w-20 h-20 rounded-full bg-gdbop-blue grid place-items-center motion-safe:animate-[pop_.45s_cubic-bezier(.2,1.4,.4,1)_both]">
+                                <Check className="text-[#0b2350]" size={40} strokeWidth={3} />
+                            </div>
                             <div className="space-y-1.5">
-                                {t.notice.map((line, i) => (
-                                    <p key={i} className={i === 0 ? 'font-bold text-white' : i === 1 || i === 2 ? 'font-semibold text-gdbop-blue' : 'text-slate-300'}>{line}</p>
-                                ))}
+                                <h2 className="text-[26px] font-bold tracking-[-0.02em] text-ios-text">{t.okTitle}</h2>
+                                <p className="text-ios-label">{t.okKeep}</p>
                             </div>
+                            <div className="mx-auto max-w-sm rounded-[14px] bg-ios-cell px-4 py-3 flex items-center justify-between gap-3 text-left">
+                                <div className="min-w-0">
+                                    <p className="text-[13px] text-ios-label">{t.okRef}</p>
+                                    <p className="text-[17px] font-semibold tabular-nums tracking-wide text-ios-text break-all">{refId}</p>
+                                </div>
+                                <button type="button" onClick={copyRef} className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-ios-cell2 px-3 py-1.5 text-[14px] font-medium text-gdbop-blue hover:brightness-110">
+                                    {copied ? <Check size={15} /> : <Copy size={15} />} {copied ? t.copied : t.copy}
+                                </button>
+                            </div>
+                            {failedUploads > 0 && <p className="mx-auto max-w-md text-[14px] text-gdbop-gold-light">{t.okFilesFailed(failedUploads)}</p>}
+                            <button type="button" onClick={() => { setView('gate'); setBanner(''); }} className={plainBtn}>{t.again}</button>
                         </div>
-                        <p className="text-xs text-slate-400">{t.required}</p>
+                    )}
 
-                        {/* Honeypot: invisible to people, tempting to bots. */}
-                        <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
-                            <label>Fax<input type="text" name="fax" tabIndex={-1} autoComplete="off" value={values.fax} onChange={on('fax')} /></label>
-                        </div>
-
-                        <Fieldset id="sec-1" legend={t.s1}>
-                            <Field id="crimeType" label={t.crimeType} required error={errText('crimeType')}>
-                                <select id="crimeType" name="crimeType" value={values.crimeType} onChange={on('crimeType')} className={inputCls(errors.crimeType)} {...aria('crimeType')}>
-                                    <option value="">{t.crimeTypePh}</option>
-                                    {CRIME_GROUPS.map((g) => (
-                                        <optgroup key={g.id} label={g[lang]}>
-                                            {CRIME_TYPES.filter((c) => c.group === g.id).map((c) => <option key={c.id} value={c.id}>{c[lang]}</option>)}
-                                        </optgroup>
-                                    ))}
-                                </select>
-                            </Field>
-                            {values.crimeType === 'children' && (
-                                <div className="flex gap-3 items-start p-3 bg-red-500/10 border border-red-500/30 text-red-100 text-sm">
-                                    <AlertTriangle className="shrink-0 mt-0.5" size={18} />
-                                    <p>{t.childrenHint}</p>
-                                </div>
-                            )}
-                            <div className="grid md:grid-cols-2 gap-5">
-                                <Field id="channel" label={t.channel} error={errText('channel')}>
-                                    <select id="channel" name="channel" value={values.channel} onChange={on('channel')} className={inputCls(errors.channel)} {...aria('channel')}>
-                                        <option value="">{t.channelPh}</option>
-                                        {CHANNELS.map((c) => <option key={c.id} value={c.id}>{c[lang]}</option>)}
-                                    </select>
-                                </Field>
-                                <Field id="incidentDate" label={t.incidentDate} error={errText('incidentDate')}>
-                                    <input id="incidentDate" name="incidentDate" type="date" min="2000-01-01" max={today} value={values.incidentDate} onChange={on('incidentDate')} className={inputCls(errors.incidentDate)} {...aria('incidentDate')} />
-                                </Field>
-                            </div>
-                            <div className="grid grid-cols-2 md:grid-cols-[2fr_1fr] gap-5">
-                                <Field id="lossAmount" label={t.lossAmount} error={errText('lossAmount')}>
-                                    <input id="lossAmount" name="lossAmount" type="text" inputMode="decimal" maxLength={15} placeholder="0.00" value={values.lossAmount} onChange={on('lossAmount')} className={inputCls(errors.lossAmount)} {...aria('lossAmount')} />
-                                </Field>
-                                <Field id="lossCurrency" label={t.lossCurrency} error={errText('lossCurrency')}>
-                                    <select id="lossCurrency" name="lossCurrency" value={values.lossCurrency} onChange={on('lossCurrency')} className={inputCls(errors.lossCurrency)} {...aria('lossCurrency')}>
-                                        <option value="">{t.lossCurrencyPh}</option>
-                                        {CURRENCIES.map((c) => <option key={c.id} value={c.id}>{c[lang]}</option>)}
-                                    </select>
-                                </Field>
-                            </div>
-                            <Field id="suspect" label={t.suspect} hint={t.suspectHint} error={errText('suspect')}>
-                                <div className="flex gap-2">
-                                    <input
-                                        id="suspect" name="suspect" type="text" maxLength={LIMITS.suspect} placeholder={t.suspectPh}
-                                        value={values.suspect} onChange={on('suspect')}
-                                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addSuspect(); } }}
-                                        disabled={values.suspects.length >= LIMITS.suspects}
-                                        className={inputCls(errors.suspect)} {...aria('suspect')}
-                                    />
-                                    <button type="button" onClick={addSuspect} aria-label={t.suspectAdd} disabled={!values.suspect.trim() || values.suspects.length >= LIMITS.suspects} className={addBtn}>
-                                        <Plus size={16} /> <span className="hidden sm:inline">{t.suspectAdd}</span>
-                                    </button>
-                                </div>
-                            </Field>
-                            {values.suspects.length > 0 && (
-                                <ul className="flex flex-wrap gap-2 -mt-2" aria-label={t.suspect}>
-                                    {values.suspects.map((x, i) => (
-                                        <li key={x} className="inline-flex items-center gap-2 max-w-full bg-slate-800 border border-gdbop-blue/40 pl-2 pr-1 py-1 text-sm">
-                                            <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-gdbop-blue">{IOC_KINDS[classifyIoc(x)][lang]}</span>
-                                            <span className="truncate text-slate-100 font-mono text-xs">{x}</span>
-                                            <button type="button" onClick={() => removeSuspect(i)} aria-label={`${t.suspectRemove}: ${x}`} title={t.suspectRemove} className="shrink-0 p-1 text-slate-400 hover:text-red-400">
-                                                <X size={14} />
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </Fieldset>
-
-                        <Fieldset id="sec-2" legend={t.s2}>
-                            <div role="radiogroup" aria-labelledby="reported-label" aria-required="true" className="space-y-3">
-                                <p id="reported-label" className="text-sm font-semibold text-slate-200">
-                                    {t.reported}<span className="text-police-red ml-1" aria-hidden="true">*</span>
-                                </p>
-                                <div className="grid sm:grid-cols-2 gap-3">
-                                    {[['yes', t.yes], ['no', t.no]].map(([val, text]) => (
-                                        <label key={val} className="flex items-center gap-3 cursor-pointer border border-slate-600 bg-slate-800/60 px-4 py-3 text-slate-200 hover:border-gdbop-blue has-[:checked]:border-gdbop-blue has-[:checked]:bg-gdbop-blue/10 has-[:checked]:text-white transition-colors">
-                                            <input
-                                                type="radio" name="alreadyReported" value={val}
-                                                checked={values.alreadyReported === val}
-                                                onChange={on('alreadyReported')}
-                                                aria-invalid={errors.alreadyReported ? 'true' : undefined}
-                                                className="h-4 w-4 accent-[#ffc83d]"
-                                            />
-                                            <span className="font-medium">{text}</span>
-                                        </label>
-                                    ))}
-                                </div>
-                                {errors.alreadyReported && <p role="alert" className="text-xs text-red-400">{errText('alreadyReported')}</p>}
-                            </div>
-                            {values.alreadyReported === 'yes' && (
-                                <Field id="reportedTo" label={t.reportedTo} required hint={t.reportedToHint} error={errText('reportedTo')}>
-                                    <input id="reportedTo" name="reportedTo" type="text" maxLength={LIMITS.reportedTo.max} value={values.reportedTo} onChange={on('reportedTo')} className={inputCls(errors.reportedTo)} {...aria('reportedTo')} />
-                                </Field>
-                            )}
-                        </Fieldset>
-
-                        <Fieldset id="sec-3" legend={t.s3}>
-                            <Field id="fullName" label={t.fullName} required hint={t.fullNameHint} error={errText('fullName')}>
-                                <input id="fullName" name="fullName" type="text" autoComplete="name" maxLength={LIMITS.nameTotal} value={values.fullName} onChange={on('fullName')} className={inputCls(errors.fullName)} {...aria('fullName')} />
-                            </Field>
-                            <div className="grid md:grid-cols-2 gap-5">
-                                {lang === 'en' ? (
-                                    <Field id="dob" label={t.dob} required hint={t.dobHint} error={errText('dob')}>
-                                        <input id="dob" name="dob" type="date" min="1900-01-01" max={today} autoComplete="bday" value={values.dob} onChange={on('dob')} className={inputCls(errors.dob)} {...aria('dob')} />
-                                    </Field>
-                                ) : (
-                                    <Field id="egn" label={t.egn} required hint={t.egnHint} error={errText('egn')}>
-                                        <input id="egn" name="egn" type="text" inputMode="numeric" autoComplete="off" maxLength={10} value={values.egn} onChange={(e) => setField('egn', e.target.value.replace(/\D/g, '').slice(0, 10))} className={`${inputCls(errors.egn)} font-mono tracking-widest`} {...aria('egn')} />
-                                    </Field>
-                                )}
-                                <Field id="phone" label={t.phone} required hint={t.phoneHint} error={errText('phone')}>
-                                    <input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={20} value={values.phone} onChange={on('phone')} className={inputCls(errors.phone)} {...aria('phone')} />
-                                </Field>
-                            </div>
-                            <Field id="email" label={t.email} required error={errText('email')}>
-                                <input id="email" name="email" type="email" autoComplete="email" maxLength={LIMITS.email} value={values.email} onChange={on('email')} className={inputCls(errors.email)} {...aria('email')} />
-                            </Field>
-                        </Fieldset>
-
-                        <Fieldset id="sec-4" legend={t.s4}>
-                            <Field id="content" label={t.content} required hint={t.contentHint} error={errText('content')}>
-                                <textarea id="content" name="content" rows={8} maxLength={LIMITS.content.max} value={values.content} onChange={on('content')} className={inputCls(errors.content)} {...aria('content')} />
-                                <p className="mt-1 text-right text-xs text-slate-500 font-mono">{values.content.length}/{LIMITS.content.max}</p>
-                            </Field>
-                        </Fieldset>
-
-                        <Fieldset id="sec-5" legend={t.s5}>
+                    {inForm && (
+                        <form onSubmit={nextStep} method="post" noValidate autoComplete="off" className="space-y-7">
                             <div className="space-y-3">
-                                <p className="text-sm font-semibold text-slate-200">{t.evidenceQ}</p>
-                                <p className="text-xs text-slate-400">{t.evidenceHint}</p>
-                                <div className="grid sm:grid-cols-2 gap-2">
-                                    {EVIDENCE.map((ev) => (
-                                        <label key={ev.id} className="flex items-center gap-3 cursor-pointer border border-slate-700 bg-slate-800/50 px-3 py-2.5 text-sm text-slate-200 hover:border-gdbop-blue has-[:checked]:border-gdbop-blue has-[:checked]:bg-gdbop-blue/10 transition-colors">
-                                            <input
-                                                type="checkbox" name="evidence" value={ev.id}
-                                                checked={values.evidence.includes(ev.id)}
-                                                onChange={() => toggleEvidence(ev.id)}
-                                                className="h-4 w-4 shrink-0 accent-[#ffc83d]"
-                                            />
-                                            <span>{ev[lang]}</span>
-                                        </label>
+                                <div className="flex items-center justify-between text-[13px] text-ios-label">
+                                    <span>{t.stepOf(step + 1, n)}</span>
+                                    <span className="hidden sm:inline">{t.required}</span>
+                                </div>
+                                <div className="grid grid-cols-5 gap-1.5" aria-hidden="true">
+                                    {SECTIONS.map((sec, i) => (
+                                        <span key={sec} className={cx('h-1 rounded-full transition-colors duration-300', i <= step ? 'bg-gdbop-blue' : 'bg-white/[0.12]')} />
                                     ))}
                                 </div>
-                                {errors.evidence && <p role="alert" className="text-xs text-red-400">{errText('evidence')}</p>}
+                                <h2 className="pt-2 text-[28px] leading-[34px] font-bold tracking-[-0.022em] text-ios-text">{t.steps[step]}</h2>
                             </div>
 
-                            {REPORT_CONFIG.filesEnabled && (
-                                <div className="space-y-4 pt-2">
-                                    <p className="text-sm font-semibold text-slate-200">{t.filesTitle}</p>
-                                    {values.crimeType === 'children' && (
-                                        <div className="space-y-3">
-                                            <div className="flex gap-3 items-start p-3 bg-red-500/10 border border-red-500/30 text-red-100 text-sm">
-                                                <AlertTriangle className="shrink-0 mt-0.5" size={18} />
-                                                <p>{t.childrenWarn}</p>
-                                            </div>
-                                            <Check id="childrenAck" checked={values.childrenAck} onChange={(v) => setField('childrenAck', v)} invalid={errors.childrenAck}>
-                                                {t.childrenAck}
-                                            </Check>
-                                            {errors.childrenAck && <p role="alert" className="text-xs text-red-400">{errText('childrenAck')}</p>}
+                            {/* Honeypot: invisible to people, tempting to bots. */}
+                            <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+                                <label>Fax<input type="text" name="fax" tabIndex={-1} autoComplete="off" value={values.fax} onChange={on('fax')} /></label>
+                            </div>
+
+                            {banner && <ErrorBanner text={banner} />}
+
+                            {step === 0 && (
+                                <>
+                                    <div className="flex gap-3 rounded-[14px] bg-ios-cell px-4 py-3.5 text-[14px] leading-snug">
+                                        <Info className="shrink-0 mt-0.5 text-gdbop-blue" size={18} />
+                                        <div className="space-y-1">
+                                            <p className="font-semibold text-ios-text">{t.notice[0]}</p>
+                                            <p className="text-ios-label">{t.notice[1]} {t.notice[2]}</p>
                                         </div>
-                                    )}
-                                    <p className="text-sm text-slate-300">{t.filesHint}</p>
-                                    <div className="flex gap-3 items-start p-3 bg-slate-800 border border-white/10 border-l-4 border-l-gdbop-blue text-slate-300 text-xs">
-                                        <Info className="shrink-0 mt-0.5" size={16} />
-                                        <p>{t.filesWarn}</p>
                                     </div>
-                                    <div>
-                                        <input
-                                            ref={fileInput} id="files" name="files" type="file" multiple
-                                            accept={ACCEPT}
-                                            className="sr-only"
-                                            onChange={(e) => { addFiles(Array.from(e.target.files || [])); e.target.value = ''; }}
-                                            {...aria('files')}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => fileInput.current?.click()}
-                                            disabled={files.length >= FILE_LIMITS.maxFiles}
-                                            className={`${addBtn} py-3`}
+
+                                    <Group header={t.groupCase}>
+                                        <Cell id="crimeType" label={t.crimeType} required error={errText('crimeType')}>
+                                            <SelectCtrl id="crimeType" name="crimeType" value={values.crimeType} onChange={on('crimeType')} {...aria('crimeType')}>
+                                                <option value="">{t.crimeTypePh}</option>
+                                                {CRIME_GROUPS.map((g) => (
+                                                    <optgroup key={g.id} label={g[lang]}>
+                                                        {CRIME_TYPES.filter((c) => c.group === g.id).map((c) => <option key={c.id} value={c.id}>{c[lang]}</option>)}
+                                                    </optgroup>
+                                                ))}
+                                            </SelectCtrl>
+                                        </Cell>
+                                        {values.crimeType === 'children' && (
+                                            <div className="flex gap-3 px-4 py-3 text-[14px] text-gdbop-gold-light bg-gdbop-blue/[0.06]">
+                                                <AlertTriangle className="shrink-0 mt-0.5" size={17} />
+                                                <p>{t.childrenHint}</p>
+                                            </div>
+                                        )}
+                                        <Cell id="channel" label={t.channel} error={errText('channel')}>
+                                            <SelectCtrl id="channel" name="channel" value={values.channel} onChange={on('channel')} {...aria('channel')}>
+                                                <option value="">{t.channelPh}</option>
+                                                {CHANNELS.map((c) => <option key={c.id} value={c.id}>{c[lang]}</option>)}
+                                            </SelectCtrl>
+                                        </Cell>
+                                        <Cell id="incidentDate" label={t.incidentDate} error={errText('incidentDate')}>
+                                            <input id="incidentDate" name="incidentDate" type="date" min="2000-01-01" max={today} value={values.incidentDate} onChange={on('incidentDate')} className={cx(ctrl, '[color-scheme:dark]')} {...aria('incidentDate')} />
+                                        </Cell>
+                                    </Group>
+
+                                    <Group header={t.groupLoss}>
+                                        <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,9.5rem)] divide-x divide-white/[0.07]">
+                                            <Cell id="lossAmount" label={t.lossAmount} error={errText('lossAmount')}>
+                                                <input id="lossAmount" name="lossAmount" type="text" inputMode="decimal" maxLength={15} placeholder="0.00" value={values.lossAmount} onChange={on('lossAmount')} className={cx(ctrl, 'tabular-nums')} {...aria('lossAmount')} />
+                                            </Cell>
+                                            <Cell id="lossCurrency" label={t.lossCurrency} error={errText('lossCurrency')}>
+                                                <SelectCtrl id="lossCurrency" name="lossCurrency" value={values.lossCurrency} onChange={on('lossCurrency')} {...aria('lossCurrency')}>
+                                                    <option value="">{t.lossCurrencyPh}</option>
+                                                    {CURRENCIES.map((c) => <option key={c.id} value={c.id}>{c.id === 'CRYPTO' || c.id === 'OTHER' ? c[lang] : c.id}</option>)}
+                                                </SelectCtrl>
+                                            </Cell>
+                                        </div>
+                                    </Group>
+
+                                    <Group header={t.groupSuspect} footer={!errors.suspect && t.suspectHint}>
+                                        <Cell
+                                            id="suspect" label={t.suspect} error={errText('suspect')}
+                                            accessory={(
+                                                <button
+                                                    type="button" onClick={addSuspect} aria-label={t.suspectAdd} title={t.suspectAdd}
+                                                    disabled={!values.suspect.trim() || values.suspects.length >= LIMITS.suspects}
+                                                    className="shrink-0 w-8 h-8 rounded-full bg-gdbop-blue text-[#0b2350] grid place-items-center transition disabled:bg-white/10 disabled:text-ios-label outline-none focus-visible:ring-2 focus-visible:ring-white"
+                                                >
+                                                    <Plus size={18} strokeWidth={2.6} />
+                                                </button>
+                                            )}
                                         >
-                                            <Paperclip size={16} />
-                                            {t.filesPick} ({files.length}/{FILE_LIMITS.maxFiles})
-                                        </button>
-                                        {errors.files && <p id="files-err" role="alert" className="mt-2 text-xs text-red-400">{errText('files')}</p>}
-                                    </div>
-                                    {files.length > 0 && (
-                                        <ul className="space-y-2">
-                                            {files.map(({ file: f, kind }, i) => (
-                                                <li key={`${f.name}-${f.size}-${f.lastModified}`} className="flex items-center justify-between gap-3 bg-slate-800/60 border border-slate-700 px-3 py-2 text-sm">
-                                                    <span className="truncate text-slate-200">{f.name}</span>
-                                                    <span className="shrink-0 flex items-center gap-3">
-                                                        <span className="text-[10px] font-bold font-mono px-1.5 py-0.5 rounded bg-slate-700 text-slate-200">{FILE_TYPES[kind].label}</span>
-                                                        <span className="text-xs text-slate-400 font-mono">{fmtSize(f.size)}</span>
-                                                        <button type="button" onClick={() => removeFile(i)} aria-label={t.filesRemove} title={t.filesRemove} className="text-slate-400 hover:text-red-400 transition-colors">
-                                                            <X size={16} />
+                                            <input
+                                                id="suspect" name="suspect" type="text" maxLength={LIMITS.suspect} placeholder={t.suspectPh} enterKeyHint="done"
+                                                value={values.suspect} onChange={on('suspect')}
+                                                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addSuspect(); } }}
+                                                disabled={values.suspects.length >= LIMITS.suspects}
+                                                className={ctrl} {...aria('suspect')}
+                                            />
+                                        </Cell>
+                                        {values.suspects.length > 0 && (
+                                            <ul className="flex flex-wrap gap-2 px-4 py-3" aria-label={t.suspect}>
+                                                {values.suspects.map((x, i) => (
+                                                    <li key={x} className="inline-flex items-center max-w-full rounded-full bg-white/[0.08] pl-3 pr-1 py-1 text-[14px]">
+                                                        <span className="shrink-0 pr-2 text-[12px] font-semibold text-gdbop-blue">{IOC_KINDS[classifyIoc(x)][lang]}</span>
+                                                        <span className="truncate text-ios-text">{x}</span>
+                                                        <button type="button" onClick={() => removeSuspect(i)} aria-label={`${t.suspectRemove}: ${x}`} className="ml-1 shrink-0 w-6 h-6 rounded-full grid place-items-center text-ios-label hover:bg-white/10 hover:text-ios-text">
+                                                            <X size={14} />
                                                         </button>
-                                                    </span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </Group>
+                                </>
                             )}
-                        </Fieldset>
 
-                        {banner && <ErrorBanner text={banner} />}
+                            {step === 1 && (
+                                <>
+                                    <Group footer={errors.alreadyReported ? <span role="alert" className="text-ios-red">{errText('alreadyReported')}</span> : null}>
+                                        <div className="px-4 py-3.5 space-y-3">
+                                            <p id="reported-label" className="text-[15px] leading-snug text-ios-text">{t.reported}<span aria-hidden="true" className="text-gdbop-blue"> *</span></p>
+                                            <Segmented name="alreadyReported" value={values.alreadyReported} onChange={(v) => setField('alreadyReported', v)} options={[['yes', t.yes], ['no', t.no]]} invalid={errors.alreadyReported} labelledBy="reported-label" />
+                                        </div>
+                                    </Group>
+                                    {values.alreadyReported === 'yes' && (
+                                        <Group>
+                                            <Cell id="reportedTo" label={t.reportedTo} required hint={t.reportedToHint} error={errText('reportedTo')}>
+                                                <input id="reportedTo" name="reportedTo" type="text" maxLength={LIMITS.reportedTo.max} value={values.reportedTo} onChange={on('reportedTo')} className={ctrl} {...aria('reportedTo')} />
+                                            </Cell>
+                                        </Group>
+                                    )}
+                                </>
+                            )}
 
-                        <button type="submit" className={`w-full md:w-auto ${primaryBtn}`}>
-                            {t.toReview} <ChevronRight size={18} />
-                        </button>
-                    </form>
-                )}
+                            {step === 2 && (
+                                <>
+                                    <Group header={t.s3.replace(/^\d+\.\s*/, '')}>
+                                        <Cell id="fullName" label={t.fullName} required hint={t.fullNameHint} error={errText('fullName')}>
+                                            <input id="fullName" name="fullName" type="text" autoComplete="name" maxLength={LIMITS.nameTotal} value={values.fullName} onChange={on('fullName')} className={ctrl} {...aria('fullName')} />
+                                        </Cell>
+                                        {lang === 'en' ? (
+                                            <Cell id="dob" label={t.dob} required hint={t.dobHint} error={errText('dob')}>
+                                                <input id="dob" name="dob" type="date" min="1900-01-01" max={today} autoComplete="bday" value={values.dob} onChange={on('dob')} className={cx(ctrl, '[color-scheme:dark]')} {...aria('dob')} />
+                                            </Cell>
+                                        ) : (
+                                            <Cell id="egn" label={t.egn} required hint={t.egnHint} error={errText('egn')}>
+                                                <input id="egn" name="egn" type="text" inputMode="numeric" autoComplete="off" maxLength={10} value={values.egn} onChange={(e) => setField('egn', e.target.value.replace(/\D/g, '').slice(0, 10))} className={cx(ctrl, 'tabular-nums tracking-[0.12em]')} {...aria('egn')} />
+                                            </Cell>
+                                        )}
+                                    </Group>
+                                    <Group header={t.groupContact}>
+                                        <Cell id="phone" label={t.phone} required hint={t.phoneHint} error={errText('phone')}>
+                                            <input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={20} value={values.phone} onChange={on('phone')} className={cx(ctrl, 'tabular-nums')} {...aria('phone')} />
+                                        </Cell>
+                                        <Cell id="email" label={t.email} required error={errText('email')}>
+                                            <input id="email" name="email" type="email" autoComplete="email" maxLength={LIMITS.email} value={values.email} onChange={on('email')} className={ctrl} {...aria('email')} />
+                                        </Cell>
+                                    </Group>
+                                </>
+                            )}
 
-                {view === 'review' && (
-                    <div className="space-y-5">
-                        <p className="text-sm text-slate-300">{t.reviewIntro}</p>
-                        {banner && <ErrorBanner text={banner} />}
+                            {step === 3 && (
+                                <Group footer={<span className="flex justify-between gap-4"><span>{!errors.content && t.contentHint}</span><span className="tabular-nums shrink-0">{values.content.length}/{LIMITS.content.max}</span></span>}>
+                                    <Cell id="content" label={t.content} required error={errText('content')}>
+                                        <textarea id="content" name="content" rows={10} maxLength={LIMITS.content.max} value={values.content} onChange={on('content')} className={cx(ctrl, 'resize-y min-h-[200px] py-1')} {...aria('content')} />
+                                    </Cell>
+                                </Group>
+                            )}
 
-                        <ReviewCard title={t.s1} section="sec-1">
-                            <Row name={t.crimeType} field="crimeType">{crimeLabel(values.crimeType, lang)}</Row>
-                            <Row name={t.channel} field="channel">{label(CHANNELS, values.channel)}</Row>
-                            <Row name={t.incidentDate} field="incidentDate">{values.incidentDate}</Row>
-                            <Row name={t.lossAmount} field="lossAmount">{values.lossAmount && `${values.lossAmount} ${label(CURRENCIES, values.lossCurrency)}`}</Row>
-                            <Row name={t.suspect} field="suspect">{payload().suspects.length > 0 && <span className="block text-left sm:text-right">{payload().suspects.map((x) => `${IOC_KINDS[classifyIoc(x)][lang]}: ${x}`).join('; ')}</span>}</Row>
-                        </ReviewCard>
+                            {step === 4 && (
+                                <>
+                                    <Group header={t.evidenceQ} footer={t.evidenceHint}>
+                                        {EVIDENCE.map((ev) => {
+                                            const on2 = values.evidence.includes(ev.id);
+                                            return (
+                                                <label key={ev.id} className={cx(cellBase, 'flex items-center justify-between gap-4 cursor-pointer py-3 has-[:focus-visible]:bg-white/[0.04]')}>
+                                                    <span className="text-[15px] text-ios-text">{ev[lang]}</span>
+                                                    <input type="checkbox" name="evidence" value={ev.id} checked={on2} onChange={() => toggleEvidence(ev.id)} className="sr-only" />
+                                                    <Check size={20} strokeWidth={2.6} className={cx('shrink-0 text-gdbop-blue transition-opacity', on2 ? 'opacity-100' : 'opacity-0')} aria-hidden="true" />
+                                                </label>
+                                            );
+                                        })}
+                                    </Group>
 
-                        <ReviewCard title={t.s2} section="sec-2">
-                            <Row name={t.reported} field="alreadyReported">{values.alreadyReported === 'yes' ? t.yes : values.alreadyReported === 'no' ? t.no : ''}</Row>
-                            {values.alreadyReported === 'yes' && <Row name={t.reportedTo} field="reportedTo">{values.reportedTo}</Row>}
-                        </ReviewCard>
+                                    {REPORT_CONFIG.filesEnabled && (
+                                        <>
+                                            {values.crimeType === 'children' && (
+                                                <Group tone="warn">
+                                                    <div className="flex gap-3 px-4 py-3 text-[14px] leading-snug text-gdbop-gold-light">
+                                                        <AlertTriangle className="shrink-0 mt-0.5" size={17} />
+                                                        <p>{t.childrenWarn}</p>
+                                                    </div>
+                                                    <Switch id="childrenAck" checked={values.childrenAck} onChange={(v) => setField('childrenAck', v)} invalid={errors.childrenAck}>{t.childrenAck}</Switch>
+                                                </Group>
+                                            )}
+                                            <Group
+                                                header={t.filesTitle}
+                                                footer={errors.files
+                                                    ? <span id="files-err" role="alert" className="text-ios-red">{errText('files')}</span>
+                                                    : <>{t.filesHint} {t.filesWarn}</>}
+                                            >
+                                                {files.map(({ file: f, kind }, i) => {
+                                                    const Icon = FILE_ICON[FILE_TYPES[kind].group] || FileText;
+                                                    return (
+                                                        <div key={`${f.name}-${f.size}-${f.lastModified}`} className="flex items-center gap-3 px-4 py-2.5">
+                                                            <span className="shrink-0 w-9 h-9 rounded-[9px] bg-ios-cell2 grid place-items-center"><Icon size={18} className="text-gdbop-blue" /></span>
+                                                            <span className="min-w-0 flex-1">
+                                                                <span className="block truncate text-[15px] text-ios-text">{f.name}</span>
+                                                                <span className="block text-[13px] text-ios-label">{FILE_TYPES[kind].label}, {fmtSize(f.size)}</span>
+                                                            </span>
+                                                            <button type="button" onClick={() => removeFile(i)} aria-label={`${t.filesRemove}: ${f.name}`} title={t.filesRemove} className="shrink-0 w-8 h-8 rounded-full grid place-items-center text-ios-label hover:bg-white/10 hover:text-ios-red">
+                                                                <X size={17} />
+                                                            </button>
+                                                        </div>
+                                                    );
+                                                })}
+                                                <div className="px-4 py-1">
+                                                    <input
+                                                        ref={fileInput} id="files" name="files" type="file" multiple accept={ACCEPT} className="sr-only"
+                                                        onChange={(e) => { addFiles(Array.from(e.target.files || [])); e.target.value = ''; }}
+                                                        {...aria('files')}
+                                                    />
+                                                    <button
+                                                        type="button" onClick={() => fileInput.current?.click()} disabled={files.length >= FILE_LIMITS.maxFiles}
+                                                        className="w-full flex items-center justify-between gap-3 py-2.5 text-[16px] text-gdbop-blue disabled:text-ios-label disabled:cursor-not-allowed outline-none focus-visible:underline"
+                                                    >
+                                                        <span className="inline-flex items-center gap-2.5"><Paperclip size={18} /> {t.filesPick}</span>
+                                                        <span className="text-[14px] text-ios-label tabular-nums">{files.length}/{FILE_LIMITS.maxFiles}</span>
+                                                    </button>
+                                                </div>
+                                            </Group>
+                                        </>
+                                    )}
+                                </>
+                            )}
 
-                        <ReviewCard title={t.s3} section="sec-3">
-                            <Row name={t.fullName} field="fullName">{values.fullName}</Row>
-                            {lang === 'en'
-                                ? <Row name={t.dob} field="dob">{values.dob}</Row>
-                                : <Row name={t.egn} field="egn">{values.egn}</Row>}
-                            <Row name={t.phone} field="phone">{values.phone}</Row>
-                            <Row name={t.email} field="email">{values.email}</Row>
-                        </ReviewCard>
+                            <div className="flex items-center justify-between gap-3 pt-1">
+                                <button type="button" onClick={prevStep} className={plainBtn}>
+                                    <ChevronLeft size={20} /> {t.prev}
+                                </button>
+                                <button type="submit" className={primaryBtn}>
+                                    {step === n - 1 ? t.toReview : t.next} <ChevronRight size={18} />
+                                </button>
+                            </div>
+                        </form>
+                    )}
 
-                        <ReviewCard title={t.s4} section="sec-4">
-                            <Row name={t.content} field="content">
-                                {values.content && <span className="block whitespace-pre-wrap text-left max-h-48 overflow-y-auto">{values.content}</span>}
-                            </Row>
-                        </ReviewCard>
+                    {view === 'review' && (
+                        <div className="space-y-7">
+                            <div className="space-y-2">
+                                <h2 className="text-[28px] leading-[34px] font-bold tracking-[-0.022em] text-ios-text">{t.reviewTitle}</h2>
+                                <p className="text-[15px] text-ios-label">{t.reviewIntro}</p>
+                            </div>
+                            {banner && <ErrorBanner text={banner} />}
 
-                        <ReviewCard title={t.s5} section="sec-5">
-                            <Row name={t.evidenceQ} field="evidence">
-                                {values.evidence.length > 0 && (
-                                    <span className="block text-left sm:text-right">{EVIDENCE.filter((ev) => values.evidence.includes(ev.id)).map((ev) => ev[lang]).join('; ')}</span>
-                                )}
-                            </Row>
-                            {REPORT_CONFIG.filesEnabled && (
-                                <Row name={t.filesTitle} field="files">
-                                    {files.length > 0 && (
-                                        <span className="block text-left sm:text-right">
-                                            {files.map(({ file: f, kind }) => `${f.name} (${FILE_TYPES[kind].label}, ${fmtSize(f.size)})`).join(', ')}
+                            <ReviewGroup index={0}>
+                                <Row name={t.crimeType} field="crimeType">{crimeLabel(values.crimeType, lang)}</Row>
+                                <Row name={t.channel} field="channel">{label(CHANNELS, values.channel)}</Row>
+                                <Row name={t.incidentDate} field="incidentDate">{values.incidentDate}</Row>
+                                <Row name={t.lossAmount} field="lossAmount">{values.lossAmount && `${values.lossAmount} ${values.lossCurrency}`}</Row>
+                                <Row name={t.suspect} field="suspect" stacked={payload().suspects.length > 0}>
+                                    {payload().suspects.length > 0 && (
+                                        <span className="flex flex-wrap gap-1.5 pt-0.5">
+                                            {payload().suspects.map((x) => (
+                                                <span key={x} className="inline-flex max-w-full rounded-full bg-white/[0.08] px-2.5 py-0.5 text-[13px]"><span className="text-gdbop-blue pr-1.5">{IOC_KINDS[classifyIoc(x)][lang]}</span><span className="truncate">{x}</span></span>
+                                            ))}
                                         </span>
                                     )}
                                 </Row>
+                            </ReviewGroup>
+
+                            <ReviewGroup index={1}>
+                                <Row name={t.reported} field="alreadyReported" stacked>{values.alreadyReported === 'yes' ? t.yes : values.alreadyReported === 'no' ? t.no : ''}</Row>
+                                {values.alreadyReported === 'yes' && <Row name={t.reportedTo} field="reportedTo">{values.reportedTo}</Row>}
+                            </ReviewGroup>
+
+                            <ReviewGroup index={2}>
+                                <Row name={t.fullName} field="fullName">{values.fullName}</Row>
+                                {lang === 'en'
+                                    ? <Row name={t.dob} field="dob">{values.dob}</Row>
+                                    : <Row name={t.egn} field="egn"><span className="tabular-nums">{values.egn}</span></Row>}
+                                <Row name={t.phone} field="phone">{values.phone}</Row>
+                                <Row name={t.email} field="email">{values.email}</Row>
+                            </ReviewGroup>
+
+                            <ReviewGroup index={3}>
+                                <Row name={t.content} field="content" stacked>
+                                    {values.content && <span className="block whitespace-pre-wrap max-h-56 overflow-y-auto text-[15px] leading-relaxed">{values.content}</span>}
+                                </Row>
+                            </ReviewGroup>
+
+                            <ReviewGroup index={4}>
+                                <Row name={t.evidenceQ} field="evidence" stacked={values.evidence.length > 0}>
+                                    {values.evidence.length > 0 && EVIDENCE.filter((ev) => values.evidence.includes(ev.id)).map((ev) => ev[lang]).join(', ')}
+                                </Row>
+                                {REPORT_CONFIG.filesEnabled && (
+                                    <Row name={t.filesTitle} field="files" stacked={files.length > 0}>
+                                        {files.length > 0 && (
+                                            <span className="block space-y-0.5">
+                                                {files.map(({ file: f, kind }) => (
+                                                    <span key={`${f.name}-${f.size}`} className="flex justify-between gap-3 text-[14px]"><span className="truncate">{f.name}</span><span className="shrink-0 text-ios-label">{FILE_TYPES[kind].label}, {fmtSize(f.size)}</span></span>
+                                                ))}
+                                            </span>
+                                        )}
+                                    </Row>
+                                )}
+                                {values.crimeType === 'children' && files.length > 0 && <Row name={t.childrenAck} field="childrenAck" stacked>{values.childrenAck ? '✓' : ''}</Row>}
+                            </ReviewGroup>
+
+                            <Group header={t.groupDecl}>
+                                <Switch id="truthDeclaration" checked={values.truthDeclaration} onChange={(v) => setField('truthDeclaration', v)} invalid={errors.truthDeclaration}>
+                                    {t.truthDeclaration}<span aria-hidden="true" className="text-gdbop-blue"> *</span>
+                                </Switch>
+                                <Switch id="consent" checked={values.consent} onChange={(v) => setField('consent', v)} invalid={errors.consent}>
+                                    {t.consent}<span aria-hidden="true" className="text-gdbop-blue"> *</span>
+                                </Switch>
+                            </Group>
+                            {(errors.truthDeclaration || errors.consent) && (
+                                <p role="alert" className="-mt-5 px-4 text-[13px] text-ios-red">{errText('truthDeclaration') || errText('consent')}</p>
                             )}
-                            {values.crimeType === 'children' && files.length > 0 && <Row name={t.childrenAck} field="childrenAck">{values.childrenAck ? '✓' : ''}</Row>}
-                        </ReviewCard>
 
-                        <div className="space-y-3 border border-slate-700/60 p-4 md:p-5">
-                            <Check id="truthDeclaration" checked={values.truthDeclaration} onChange={(v) => setField('truthDeclaration', v)} invalid={errors.truthDeclaration}>
-                                {t.truthDeclaration}<span className="text-police-red ml-1" aria-hidden="true">*</span>
-                            </Check>
-                            {errors.truthDeclaration && <p role="alert" className="text-xs text-red-400">{errText('truthDeclaration')}</p>}
-                            <Check id="consent" checked={values.consent} onChange={(v) => setField('consent', v)} invalid={errors.consent}>
-                                {t.consent}<span className="text-police-red ml-1" aria-hidden="true">*</span>
-                            </Check>
-                            {errors.consent && <p role="alert" className="text-xs text-red-400">{errText('consent')}</p>}
-                        </div>
+                            <div>
+                                <div ref={widgetBox} aria-label={t.captcha} className="min-h-[65px]" />
+                                {errors.captcha && <p role="alert" className="pt-1 px-1 text-[13px] text-ios-red">{errText('captcha')}</p>}
+                            </div>
 
-                        <div>
-                            <div ref={widgetBox} aria-label={t.captcha} />
-                            {errors.captcha && <p role="alert" className="mt-1 text-xs text-red-400">{errText('captcha')}</p>}
-                        </div>
-
-                        <div className="flex flex-col-reverse sm:flex-row gap-3 sm:justify-between">
-                            <button type="button" onClick={() => editSection('sec-1')} className={secondaryBtn}>
-                                <ArrowLeft size={18} /> {t.back}
-                            </button>
-                            {progress && (
-                                <div className="sm:flex-1 sm:mx-4 self-center w-full" role="status" aria-live="polite">
-                                    <p className="text-xs text-slate-300 mb-1">{progress.finishing ? t.finishing : t.uploading(progress.i, progress.n)}</p>
-                                    <div className="h-2 rounded bg-slate-700 overflow-hidden">
-                                        <div className="h-2 bg-gdbop-blue transition-all" style={{ width: `${Math.round(((progress.i - 1 + progress.frac) / progress.n) * 100)}%` }} />
+                            {progress ? (
+                                <div className="rounded-[14px] bg-ios-cell px-4 py-3.5 space-y-2" role="status" aria-live="polite">
+                                    <div className="flex justify-between text-[14px]">
+                                        <span className="text-ios-text">{progress.finishing ? t.finishing : t.uploading(progress.i, progress.n)}</span>
+                                        <span className="text-ios-label tabular-nums">{Math.round(((progress.i - 1 + progress.frac) / progress.n) * 100)}%</span>
+                                    </div>
+                                    <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+                                        <div className="h-full rounded-full bg-gdbop-blue transition-[width] duration-200" style={{ width: `${Math.round(((progress.i - 1 + progress.frac) / progress.n) * 100)}%` }} />
                                     </div>
                                 </div>
+                            ) : (
+                                <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                                    <button type="button" onClick={() => editSection('sec-5')} className={plainBtn}>
+                                        <ChevronLeft size={20} /> {t.back}
+                                    </button>
+                                    <button type="button" onClick={send} disabled={submitting} className={primaryBtn}>
+                                        {submitting ? <Loader2 className="animate-spin" size={18} /> : <Send size={17} />}
+                                        {submitting ? t.sending : t.submit}
+                                    </button>
+                                </div>
                             )}
-                            <button type="button" onClick={send} disabled={submitting} className={primaryBtn}>
-                                {submitting ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
-                                {submitting ? t.sending : t.submit}
-                            </button>
                         </div>
-                    </div>
-                )}
-            </div>
-            <aside className="space-y-6 lg:sticky lg:top-28">
-                <div className="bg-slate-900 border border-white/10 border-l-[3px] border-l-gdbop-blue p-6">
-                    <h4 className="text-xs font-bold uppercase tracking-[0.16em] text-gdbop-blue mb-3">{t.asidePhones}</h4>
-                    <ul>
+                    )}
+                </div>
+
+                <aside className="space-y-6 lg:sticky lg:top-28">
+                    <Group header={t.asidePhones}>
                         {t.phones.map(([num, href, lbl]) => (
-                            <li key={num} className="border-t border-white/5 first:border-0 py-2.5">
-                                <a href={href} className="block group">
-                                    <span className="block text-lg font-bold text-white group-hover:text-gdbop-blue">{num}</span>
-                                    <span className="block text-xs text-slate-300">{lbl}</span>
-                                </a>
-                            </li>
+                            <a key={num} href={href} className="flex items-center gap-3 px-4 py-3 hover:bg-white/[0.04] transition-colors">
+                                <span className="shrink-0 w-8 h-8 rounded-full bg-ios-cell2 grid place-items-center"><Phone size={15} className="text-gdbop-blue" /></span>
+                                <span className="min-w-0">
+                                    <span className="block text-[17px] font-semibold tabular-nums text-ios-text">{num}</span>
+                                    <span className="block text-[13px] text-ios-label">{lbl}</span>
+                                </span>
+                            </a>
                         ))}
-                    </ul>
-                </div>
-                <div className="bg-slate-900 border border-white/10 border-l-[3px] border-l-gdbop-blue p-6">
-                    <h4 className="text-xs font-bold uppercase tracking-[0.16em] text-gdbop-blue mb-3">{t.asideAfter}</h4>
-                    <ol className="space-y-3">
+                    </Group>
+                    <Group header={t.asideAfter}>
                         {t.after.map((x, i) => (
-                            <li key={i} className="flex gap-3 text-sm text-slate-300">
-                                <span className="shrink-0 w-6 h-6 inline-flex items-center justify-center border border-gdbop-blue/60 text-gdbop-blue text-xs font-bold">{i + 1}</span>
+                            <div key={i} className="flex gap-3 px-4 py-3 text-[14px] leading-snug text-ios-text">
+                                <span className="shrink-0 w-6 h-6 rounded-full bg-white/[0.08] grid place-items-center text-[12px] font-semibold text-ios-label tabular-nums">{i + 1}</span>
                                 <span>{x}</span>
-                            </li>
+                            </div>
                         ))}
-                    </ol>
-                </div>
-            </aside>
+                    </Group>
+                </aside>
             </div>
         </section>
     );

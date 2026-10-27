@@ -19,7 +19,7 @@ preview_urls = false
 [vars]
 # "true" hides the whole site behind a 503 while it is being built (signed file
 # links keep working). Set to "false" and redeploy to open it to visitors.
-MAINTENANCE = "true"
+MAINTENANCE = "false"
 # The form is served from this same origin, so only it may call the API.
 ALLOWED_ORIGINS = "https://report.stop-the-scam.xyz"
 PUBLIC_BASE_URL = "https://report.stop-the-scam.xyz"

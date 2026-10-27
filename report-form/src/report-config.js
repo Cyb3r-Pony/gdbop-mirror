@@ -4,7 +4,7 @@
 // and the page says it is temporarily unavailable.
 export const REPORT_CONFIG = {
     apiUrl: '/api/report',
-    turnstileSiteKey: '',
+    turnstileSiteKey: '0x4AAAAAAFoEy_yLjmmP9ZTT',
     // Image attachments (needs the R2 bucket and the "Scan report uploads" workflow).
     filesEnabled: true,
 };
